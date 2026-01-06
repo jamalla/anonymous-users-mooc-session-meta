@@ -35,6 +35,41 @@
       "run_tag": "20260106_212607",
       "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\01_ingest_mars\\20260106_212607",
       "created_at": "2026-01-06T21:26:07"
+    },
+    {
+      "run_id": "97792e2b1f16444db81a7e9209384eb1",
+      "notebook": "02_sessionize_mars",
+      "run_tag": "20260106_214341",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\02_sessionize_mars\\20260106_214341",
+      "created_at": "2026-01-06T21:43:41"
+    },
+    {
+      "run_id": "c9bb11a0b82d43d49f621664042c64fc",
+      "notebook": "02_sessionize_mars",
+      "run_tag": "20260106_220331",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\02_sessionize_mars\\20260106_220331",
+      "created_at": "2026-01-06T22:03:31"
+    },
+    {
+      "run_id": "d992dd3035084ff2aa5b5847f1a09009",
+      "notebook": "02_sessionize_mars",
+      "run_tag": "20260106_220940",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\02_sessionize_mars\\20260106_220940",
+      "created_at": "2026-01-06T22:09:40"
+    },
+    {
+      "run_id": "c208aa3d1e1d44d3be085f20233cb39d",
+      "notebook": "02_sessionize_mars",
+      "run_tag": "20260106_221127",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\02_sessionize_mars\\20260106_221127",
+      "created_at": "2026-01-06T22:11:27"
+    },
+    {
+      "run_id": "98557eb8b10e4fb2bcbc25f94b4d33c4",
+      "notebook": "03_build_vocab_and_pairs_mars",
+      "run_tag": "20260106_222355",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\03_build_vocab_and_pairs_mars\\20260106_222355",
+      "created_at": "2026-01-06T22:23:55"
     }
   ]
 }
