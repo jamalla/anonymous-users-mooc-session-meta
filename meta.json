@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "runs": [
+    {
+      "run_id": "ed0bb6dca0b34836a1173fbee7526b58",
+      "notebook": "00_bootstrap_and_conventions",
+      "run_tag": "20260106_191029",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\00_bootstrap_and_conventions\\20260106_191029",
+      "created_at": "2026-01-06T19:10:29"
+    }
+  ]
+}
