@@ -70,6 +70,13 @@
       "run_tag": "20260106_222355",
       "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\03_build_vocab_and_pairs_mars\\20260106_222355",
       "created_at": "2026-01-06T22:23:55"
+    },
+    {
+      "run_id": "13ad379037c74aae8d605bbbfe97e93b",
+      "notebook": "04_user_split_mars",
+      "run_tag": "20260106_223025",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\04_user_split_mars\\20260106_223025",
+      "created_at": "2026-01-06T22:30:25"
     }
   ]
 }
