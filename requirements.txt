@@ -1,0 +1,27 @@
+# Core scientific stack
+numpy
+pandas
+scipy
+scikit-learn
+
+# Deep learning
+torch
+torchvision
+torchaudio
+
+# Notebooks + progress
+jupyter
+ipykernel
+tqdm
+
+# Experiment tracking / config
+pyyaml
+
+# Plotting
+matplotlib
+
+# Utilities
+rich
+ijson
+pyarrow
+duckdb
