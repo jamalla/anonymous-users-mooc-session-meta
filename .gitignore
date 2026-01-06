@@ -13,10 +13,9 @@ venv/
 Thumbs.db
 
 # Data & runs (NEVER COMMIT)
-data/raw/
+data/raw/*
 data/processed/*
-data/sessionized/*
-data/external/
+data/interim/*
 runs/
 reports/
 
