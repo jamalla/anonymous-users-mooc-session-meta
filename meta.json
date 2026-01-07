@@ -98,6 +98,132 @@
       "run_tag": "20260106_234210",
       "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\06_baselines_mars_global\\20260106_234210",
       "created_at": "2026-01-06T23:42:10"
+    },
+    {
+      "run_id": "62c28ca60e3943a099290bf3427e1859",
+      "notebook": "05_episode_index_mars",
+      "run_tag": "20260107_002819",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\05_episode_index_mars\\20260107_002819",
+      "created_at": "2026-01-07T00:28:19"
+    },
+    {
+      "run_id": "ddb61db225584194a3f6f5f31600931b",
+      "notebook": "06_baselines_mars_global",
+      "run_tag": "20260107_081047",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\06_baselines_mars_global\\20260107_081047",
+      "created_at": "2026-01-07T08:10:47"
+    },
+    {
+      "run_id": "811e1e102eb84319981362a03ad6bd6c",
+      "notebook": "01_ingest_xuetangx",
+      "run_tag": "20260107_094103",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\01_ingest_xuetangx\\20260107_094103",
+      "created_at": "2026-01-07T09:41:03"
+    },
+    {
+      "run_id": "606151122b3c499ebab423b4e5181462",
+      "notebook": "02_sessionize_xuetangx",
+      "run_tag": "20260107_095049",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\02_sessionize_xuetangx\\20260107_095049",
+      "created_at": "2026-01-07T09:50:49"
+    },
+    {
+      "run_id": "3edee47cc4694f48ade027ece77e109c",
+      "notebook": "02_sessionize_xuetangx",
+      "run_tag": "20260107_100250",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\02_sessionize_xuetangx\\20260107_100250",
+      "created_at": "2026-01-07T10:02:50"
+    },
+    {
+      "run_id": "ac4a9d03f744472f8dc679fe8c807615",
+      "notebook": "02_sessionize_xuetangx",
+      "run_tag": "20260107_100441",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\02_sessionize_xuetangx\\20260107_100441",
+      "created_at": "2026-01-07T10:04:41"
+    },
+    {
+      "run_id": "03a2c07060884bc1988576ebecc2fd40",
+      "notebook": "03_build_vocab_pairs_xuetangx",
+      "run_tag": "20260107_101724",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\03_build_vocab_pairs_xuetangx\\20260107_101724",
+      "created_at": "2026-01-07T10:17:24"
+    },
+    {
+      "run_id": "3d685712ae524adaa4b9963326d5123e",
+      "notebook": "03_build_vocab_pairs_xuetangx",
+      "run_tag": "20260107_102307",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\03_build_vocab_pairs_xuetangx\\20260107_102307",
+      "created_at": "2026-01-07T10:23:07"
+    },
+    {
+      "run_id": "e95317316c87491bbba633ea8fac2d65",
+      "notebook": "03_build_vocab_pairs_xuetangx",
+      "run_tag": "20260107_102533",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\03_build_vocab_pairs_xuetangx\\20260107_102533",
+      "created_at": "2026-01-07T10:25:33"
+    },
+    {
+      "run_id": "30462065e9064487b5cffd952bb81e89",
+      "notebook": "04_user_split_xuetangx",
+      "run_tag": "20260107_141157",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\04_user_split_xuetangx\\20260107_141157",
+      "created_at": "2026-01-07T14:11:57"
+    },
+    {
+      "run_id": "fcd2232964e5403d98abfa414eb4bdcd",
+      "notebook": "05_episode_index_xuetangx",
+      "run_tag": "20260107_142414",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\05_episode_index_xuetangx\\20260107_142414",
+      "created_at": "2026-01-07T14:24:14"
+    },
+    {
+      "run_id": "650404915aae44ccbeb5f12401acaa49",
+      "notebook": "05_episode_index_xuetangx",
+      "run_tag": "20260107_143150",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\05_episode_index_xuetangx\\20260107_143150",
+      "created_at": "2026-01-07T14:31:50"
+    },
+    {
+      "run_id": "89dd0bf5e64043c495efe510227361c9",
+      "notebook": "04_user_split_xuetangx",
+      "run_tag": "20260107_144034",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\04_user_split_xuetangx\\20260107_144034",
+      "created_at": "2026-01-07T14:40:34"
+    },
+    {
+      "run_id": "c3c9715923fd426fbc30f73a6df09df4",
+      "notebook": "05_episode_index_xuetangx",
+      "run_tag": "20260107_144118",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\05_episode_index_xuetangx\\20260107_144118",
+      "created_at": "2026-01-07T14:41:18"
+    },
+    {
+      "run_id": "f065be9578c545c08e5ac2a403f0d030",
+      "notebook": "06_baselines_xuetangx",
+      "run_tag": "20260107_144813",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\06_baselines_xuetangx\\20260107_144813",
+      "created_at": "2026-01-07T14:48:13"
+    },
+    {
+      "run_id": "3cfb7a16617d4c66960bf6d4ee2678d2",
+      "notebook": "06_baselines_xuetangx",
+      "run_tag": "20260107_145249",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\06_baselines_xuetangx\\20260107_145249",
+      "created_at": "2026-01-07T14:52:49"
+    },
+    {
+      "run_id": "e54cc9f0d0e34c4581d3627d4bdacf4f",
+      "notebook": "06_baselines_xuetangx",
+      "run_tag": "20260107_145810",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\06_baselines_xuetangx\\20260107_145810",
+      "created_at": "2026-01-07T14:58:10"
+    },
+    {
+      "run_id": "121acfbeb58a4296b36f31f3170c4a12",
+      "notebook": "06_baselines_xuetangx",
+      "run_tag": "20260107_151346",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\06_baselines_xuetangx\\20260107_151346",
+      "created_at": "2026-01-07T15:13:46"
     }
   ]
 }

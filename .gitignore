@@ -18,6 +18,8 @@ data/processed/*
 data/interim/*
 runs/
 reports/
+results/
+models/
 
 # Model artifacts
 *.pt
@@ -28,4 +30,3 @@ reports/
 *.log
 
 PROJECT_STATE.md
-NOTEBOOK_REVIEW_00_TO_14.md
