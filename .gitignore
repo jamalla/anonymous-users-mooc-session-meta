@@ -30,3 +30,6 @@ models/
 *.log
 
 PROJECT_STATE.md
+.claude/
+.idea/
+.vscode/
