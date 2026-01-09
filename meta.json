@@ -371,6 +371,13 @@
       "run_tag": "20260109_151019",
       "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\07_maml_xuetangx\\20260109_151019",
       "created_at": "2026-01-09T15:10:19"
+    },
+    {
+      "run_id": "6c0410bea0b64e70b8b15a1b2915aa8b",
+      "notebook": "07c_metasgd_xuetangx",
+      "run_tag": "20260109_215857",
+      "out_dir": "c:\\Users\\User\\Documents\\ml-workspace\\anonymous-users-mooc-session-meta\\reports\\07c_metasgd_xuetangx\\20260109_215857",
+      "created_at": "2026-01-09T21:58:57"
     }
   ]
 }
