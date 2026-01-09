@@ -16,10 +16,11 @@ Thumbs.db
 data/raw/*
 data/processed/*
 data/interim/*
-runs/
-reports/
-results/
-models/
+runs/*
+reports/*
+results/*
+models/*
+docs/*
 
 # Model artifacts
 *.pt
