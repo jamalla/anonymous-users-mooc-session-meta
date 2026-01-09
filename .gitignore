@@ -21,6 +21,7 @@ reports/*
 results/*
 models/*
 docs/*
+scripts/*
 
 # Model artifacts
 *.pt
