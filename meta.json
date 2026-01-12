@@ -497,6 +497,20 @@
       "run_tag": "20260112_182409",
       "out_dir": "C:\\Users\\User\\Documents\\ml-workspace\\anonymous-users-mooc-session-meta\\reports\\07f_maml_residual_xuetangx\\20260112_182409",
       "created_at": "2026-01-12T18:24:09"
+    },
+    {
+      "run_id": "556c5b7b08a546ea960ae5706862a8b7",
+      "notebook": "07f_maml_residual_xuetangx",
+      "run_tag": "20260112_193753",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\07f_maml_residual_xuetangx\\20260112_193753",
+      "created_at": "2026-01-12T19:37:53"
+    },
+    {
+      "run_id": "d8de0e7e75dd442aa4924fb88b351220",
+      "notebook": "07f_maml_residual_xuetangx",
+      "run_tag": "20260112_210629",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\07f_maml_residual_xuetangx\\20260112_210629",
+      "created_at": "2026-01-12T21:06:29"
     }
   ]
 }
