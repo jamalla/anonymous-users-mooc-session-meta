@@ -469,6 +469,20 @@
       "run_tag": "20260112_151130",
       "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\07e_maml_warmstart_xuetangx\\20260112_151130",
       "created_at": "2026-01-12T15:11:30"
+    },
+    {
+      "run_id": "f05872367d854556809b9f7f7f010bd6",
+      "notebook": "07f_maml_residual_xuetangx",
+      "run_tag": "20260112_181623",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\07f_maml_residual_xuetangx\\20260112_181623",
+      "created_at": "2026-01-12T18:16:23"
+    },
+    {
+      "run_id": "02a77d305a4e4190a7a3160b25755b6e",
+      "notebook": "07f_maml_residual_xuetangx",
+      "run_tag": "20260112_181848",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\07f_maml_residual_xuetangx\\20260112_181848",
+      "created_at": "2026-01-12T18:18:48"
     }
   ]
 }
