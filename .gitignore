@@ -19,7 +19,7 @@ data/interim/*
 runs/*
 reports/*
 results/*
-models/*
+
 docs/*
 scripts/*
 
