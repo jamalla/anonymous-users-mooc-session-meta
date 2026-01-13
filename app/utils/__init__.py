@@ -1,0 +1,37 @@
+"""Utility functions for the Streamlit app."""
+
+from .data_loader import (
+    find_repo_root,
+    REPO_ROOT,
+    DATASETS,
+    get_dataset_config,
+    load_json,
+    load_parquet,
+    load_raw_data,
+    load_interactions,
+    load_sessions,
+    load_pairs,
+    load_episodes,
+    load_vocab,
+    load_baseline_results,
+    load_maml_results,
+    compute_gap_statistics,
+)
+
+__all__ = [
+    "find_repo_root",
+    "REPO_ROOT",
+    "DATASETS",
+    "get_dataset_config",
+    "load_json",
+    "load_parquet",
+    "load_raw_data",
+    "load_interactions",
+    "load_sessions",
+    "load_pairs",
+    "load_episodes",
+    "load_vocab",
+    "load_baseline_results",
+    "load_maml_results",
+    "compute_gap_statistics",
+]
