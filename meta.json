@@ -513,18 +513,25 @@
       "created_at": "2026-01-12T21:06:29"
     },
     {
-      "run_id": "23b4eb949a2e406fa0a368bf15d20f3f",
-      "notebook": "07f_maml_residual_xuetangx",
-      "run_tag": "20260112_211232",
-      "out_dir": "C:\\Users\\User\\Documents\\ml-workspace\\anonymous-users-mooc-session-meta\\reports\\07f_maml_residual_xuetangx\\20260112_211232",
-      "created_at": "2026-01-12T21:12:32"
+      "run_id": "77bb31ce5c144712b0628895c914fe90",
+      "notebook": "01_ingest_mars",
+      "run_tag": "20260112_221728",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\01_ingest_mars\\20260112_221728",
+      "created_at": "2026-01-12T22:17:28"
     },
     {
-      "run_id": "4f51ba826fc94826992eb201dd476cef",
-      "notebook": "07g_maml_warmstart_residual_xuetangx",
-      "run_tag": "20260112_213940",
-      "out_dir": "C:\\Users\\User\\Documents\\ml-workspace\\anonymous-users-mooc-session-meta\\reports\\07g_maml_warmstart_residual_xuetangx\\20260112_213940",
-      "created_at": "2026-01-12T21:39:40"
+      "run_id": "c794db965e234f28a5c385455b3790e6",
+      "notebook": "07_maml_warmstart_residual_mars_mars",
+      "run_tag": "20260113_063856",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\07_maml_warmstart_residual_mars_mars\\20260113_063856",
+      "created_at": "2026-01-13T06:38:56"
+    },
+    {
+      "run_id": "5ae2530f11f040e6878a51a562f27645",
+      "notebook": "07_maml_warmstart_residual_mars_mars",
+      "run_tag": "20260113_064413",
+      "out_dir": "C:\\anonymous-users-mooc-session-meta\\reports\\07_maml_warmstart_residual_mars_mars\\20260113_064413",
+      "created_at": "2026-01-13T06:44:13"
     }
   ]
 }
