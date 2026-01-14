@@ -1,0 +1,23 @@
+
+\begin{table}[htbp]
+\centering
+\caption{Cold-Start Recommendation Performance on XuetangX Dataset (K=5 Support Examples)}
+\label{tab:main_results}
+\begin{tabular}{lcccc|c}
+\toprule
+\textbf{Method} & \textbf{Acc@1} & \textbf{Recall@5} & \textbf{Recall@10} & \textbf{MRR} & \textbf{vs Baseline} \\
+\midrule
+GRU Baseline & 0.3373 & 0.5590 & 0.6575 & 0.4438 & +0.00 pp \\
+MAML (Random Init) & 0.3052 & 0.5040 & 0.6095 & 0.4053 & -3.21 pp \\
+MAML Warm-Start & 0.3228 & 0.5514 & 0.6393 & 0.4336 & -1.45 pp \\
+Residual MAML & 0.3162 & 0.5130 & 0.6061 & 0.4151 & -2.11 pp \\
+\textbf{Warm-Start + Residual (Ours)} & 0.3419 & 0.5728 & 0.6688 & 0.4390 & +0.46 pp \\
+
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item Note: All methods evaluated on 346 cold-start test users. Baseline is GRU trained on all training data.
+\item Bold indicates our proposed method. pp = percentage points.
+\end{tablenotes}
+\end{table}
