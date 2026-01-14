@@ -35,7 +35,14 @@ def load_data(dataset, sample_size=500000):
 df, total_count = load_data(dataset_name)
 
 if df is None:
-    st.error(f"Could not load interactions for {dataset_name}. Please run the preprocessing pipeline first.")
+    st.warning(f"**Data files not available for {dataset_name}**")
+    st.info("""
+    This page requires raw interaction data files which are not included in the cloud deployment.
+
+    **For cloud users:** Please visit the **Baselines** and **MAML** pages (5-10) to see experiment results.
+
+    **For local users:** Run the preprocessing pipeline first to generate the data files.
+    """)
     st.stop()
 
 if len(df) < total_count:

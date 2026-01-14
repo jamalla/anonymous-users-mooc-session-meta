@@ -30,7 +30,14 @@ def load_session_data(dataset):
 sessions_df = load_session_data(dataset_name)
 
 if sessions_df is None:
-    st.error(f"Could not load sessions for {dataset_name}. Please run the sessionization pipeline first.")
+    st.warning(f"**Data files not available for {dataset_name}**")
+    st.info("""
+    This page requires session data files which are not included in the cloud deployment.
+
+    **For cloud users:** Please visit the **Baselines** and **MAML** pages (5-10) to see experiment results.
+
+    **For local users:** Run the sessionization pipeline first to generate the data files.
+    """)
     st.stop()
 
 st.success(f"Loaded {len(sessions_df):,} sessions from {dataset_name}")

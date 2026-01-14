@@ -50,7 +50,14 @@ def load_and_compute_gaps(dataset, sample_size=500000):
 df, stats, total_count = load_and_compute_gaps(dataset_name)
 
 if df is None or not stats:
-    st.error(f"Could not load interactions for {dataset_name}. Please run the preprocessing pipeline first.")
+    st.warning(f"**Data files not available for {dataset_name}**")
+    st.info("""
+    This page requires raw interaction data files which are not included in the cloud deployment.
+
+    **For cloud users:** Please visit the **Baselines** and **MAML** pages (5-10) to see experiment results.
+
+    **For local users:** Run the preprocessing pipeline first to generate the data files.
+    """)
     st.stop()
 
 gaps = stats["gaps"]

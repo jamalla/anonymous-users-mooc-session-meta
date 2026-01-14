@@ -85,7 +85,15 @@ for split, df in [("train", train_pairs), ("val", val_pairs), ("test", test_pair
 if pairs_stats:
     st.table(pd.DataFrame(pairs_stats))
 else:
-    st.warning("No pairs data found. Please run the pair generation pipeline first.")
+    st.warning(f"**Data files not available for {dataset_name}**")
+    st.info("""
+    This page requires pairs/episodes data files which are not included in the cloud deployment.
+
+    **For cloud users:** Please visit the **Baselines** and **MAML** pages (5-10) to see experiment results.
+
+    **For local users:** Run the pair generation pipeline first to generate the data files.
+    """)
+    st.stop()
 
 # Prefix -> Target Examples
 st.header("Prefix → Target Examples")
