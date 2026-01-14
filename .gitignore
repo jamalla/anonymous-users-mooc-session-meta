@@ -19,6 +19,8 @@ data/interim/*
 runs/*
 reports/*
 results/*
+# BUT keep results JSON for Streamlit deployment
+!results/*.json
 
 docs/*
 scripts/*

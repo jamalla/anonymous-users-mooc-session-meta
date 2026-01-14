@@ -1,0 +1,53 @@
+{
+  "notebook": "07g_maml_warmstart_residual_xuetangx",
+  "k_shot_config": {
+    "K": 5,
+    "Q": 10
+  },
+  "n_test_episodes": 346,
+  "baseline": {
+    "gru_global": {
+      "accuracy@1": 0.33728323699421964,
+      "recall@5": 0.5589595375722544,
+      "recall@10": 0.6575144508670521,
+      "mrr": 0.4437668869172203
+    }
+  },
+  "maml_warmstart_residual": {
+    "zero_shot": {
+      "accuracy@1": 0.06618497109826589,
+      "recall@5": 0.21473988439306357,
+      "recall@10": 0.3040462427745665,
+      "mrr": 0.1292628910909256
+    },
+    "few_shot_K5": {
+      "accuracy@1": 0.3346820809248555,
+      "recall@5": 0.5728323699421966,
+      "recall@10": 0.6687861271676301,
+      "mrr": 0.43897765850077924
+    }
+  },
+  "improvement_over_baseline_pct": -0.771208226221067,
+  "metrics": {
+    "gru_baseline_acc1": 0.3373,
+    "maml_zero_shot_acc1": 0.06618497109826589,
+    "maml_few_shot_K5_acc1": 0.34190751445086703,
+    "improvement_over_baseline_pct": 1.3659989477815135,
+    "checkpoint_used": "checkpoint_iter1000.pth",
+    "inner_lr": 0.02
+  },
+  "key_findings": [
+    "Zero-shot performance (no adaptation): Acc@1=0.0662",
+    "Few-shot performance (K=5 adaptation): Acc@1=0.3419",
+    "Improvement over GRU baseline: +1.37% (0.3419 vs 0.3373)",
+    "Best checkpoint: iter1000 (early stopping prevents overfitting)",
+    "Optimal inner_lr: 0.02 (tuned via sweep)"
+  ],
+  "data_fingerprints": {
+    "meta_model": {
+      "path": "c:\\anonymous-users-mooc-session-meta\\models\\maml\\checkpoints_warmstart_residual\\checkpoint_iter1000.pth",
+      "bytes": 1712167,
+      "sha256": "0a38fc91259df8b1264958850eb3ab908752f790f4d59705a3e912fd43911ac3"
+    }
+  }
+}
