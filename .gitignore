@@ -21,7 +21,7 @@ reports/*
 results/*
 # BUT keep results JSON for Streamlit deployment
 !results/*.json
-
+figures/*
 docs/*
 scripts/*
 

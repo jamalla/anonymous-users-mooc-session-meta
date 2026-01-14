@@ -4,7 +4,13 @@
       "Bash(python:*)",
       "Bash(ls:*)",
       "Bash(head:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nUpdate Streamlit app with MAML results and comparison page\n\n- Add page 10: Comparative Analysis with all MAML variants\n- Update pages 7-9 with proper results display\n- Add tuned results support in data_loader\n- Add .streamlit config for theme\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)"
     ]
   }
 }
