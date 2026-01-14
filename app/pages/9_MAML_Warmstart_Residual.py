@@ -11,22 +11,16 @@ from pathlib import Path
 
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from utils import get_dataset_config, load_baseline_results, load_maml_results, DATASETS
+from utils import get_dataset_config, load_baseline_results, load_maml_results, DATASETS, render_dataset_selector
 
 st.set_page_config(page_title="MAML + Warm-Start + Residual", page_icon="⭐", layout="wide")
 
 st.title("⭐ MAML + Warm-Start + Residual (07g)")
 st.markdown("**Best Approach:** Pre-trained initialization + residual regularization")
 
-# Dataset selector
-dataset_name = st.sidebar.selectbox(
-    "Select Dataset",
-    options=list(DATASETS.keys()),
-    index=0
-)
-
+# Global dataset selector at top of sidebar
+dataset_name = render_dataset_selector()
 config = get_dataset_config(dataset_name)
-st.sidebar.info(f"**Dataset:** {config['name']}\n\n{config['description']}")
 
 # Load results
 @st.cache_data

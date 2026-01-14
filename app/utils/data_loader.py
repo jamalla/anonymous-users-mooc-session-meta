@@ -210,6 +210,44 @@ def load_all_maml_results(dataset_name: str) -> Dict[str, Optional[Dict]]:
         results[variant] = load_maml_results(dataset_name, variant)
     return results
 
+def render_dataset_selector() -> str:
+    """
+    Render the global dataset selector in the sidebar.
+    Uses session state to persist selection across pages.
+    Returns the selected dataset name.
+
+    Must be called within a Streamlit page context.
+    """
+    import streamlit as st
+
+    # Initialize session state if not exists
+    if "selected_dataset" not in st.session_state:
+        st.session_state.selected_dataset = "XuetangX"
+
+    with st.sidebar:
+        st.markdown("### 📊 Dataset Selection")
+
+        dataset_options = list(DATASETS.keys())
+        selected = st.selectbox(
+            "Select Dataset",
+            options=dataset_options,
+            index=dataset_options.index(st.session_state.selected_dataset),
+            key=f"dataset_selector_{id(st)}",
+            help="Select the dataset to analyze"
+        )
+
+        # Update session state
+        st.session_state.selected_dataset = selected
+
+        # Show dataset info
+        config = DATASETS[selected]
+        st.caption(config["description"])
+
+        st.divider()
+
+    return selected
+
+
 def compute_gap_statistics(df: pd.DataFrame) -> Dict[str, Any]:
     """Compute gap statistics from interactions dataframe."""
     # Handle different timestamp column names

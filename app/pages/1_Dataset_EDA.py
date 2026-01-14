@@ -12,22 +12,16 @@ from pathlib import Path
 
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from utils import get_dataset_config, load_interactions, load_raw_data, DATASETS
+from utils import get_dataset_config, load_interactions, load_raw_data, DATASETS, render_dataset_selector
 
 st.set_page_config(page_title="Dataset EDA", page_icon="📊", layout="wide")
 
 st.title("📊 Dataset EDA")
 st.markdown("Exploratory Data Analysis of MOOC Interaction Data")
 
-# Dataset selector
-dataset_name = st.sidebar.selectbox(
-    "Select Dataset",
-    options=list(DATASETS.keys()),
-    index=0
-)
-
+# Global dataset selector at top of sidebar
+dataset_name = render_dataset_selector()
 config = get_dataset_config(dataset_name)
-st.sidebar.info(f"**Dataset:** {config['name']}\n\n{config['description']}")
 
 # Load data with sampling for large datasets
 @st.cache_data(show_spinner="Loading interactions data...")

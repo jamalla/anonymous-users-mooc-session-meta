@@ -92,6 +92,34 @@ Use the **sidebar** to navigate between pages:
 
 # Sidebar info
 with st.sidebar:
+    # Global dataset selector at top of sidebar
+    st.markdown("### 📊 Dataset Selection")
+
+    # Initialize session state for dataset if not exists
+    if "selected_dataset" not in st.session_state:
+        st.session_state.selected_dataset = "XuetangX"
+
+    # Dataset selector dropdown
+    dataset_options = ["XuetangX", "MARS"]
+    selected_dataset = st.selectbox(
+        "Select Dataset",
+        options=dataset_options,
+        index=dataset_options.index(st.session_state.selected_dataset),
+        key="dataset_selector_home",
+        help="Select the dataset to analyze across all pages"
+    )
+
+    # Update session state
+    st.session_state.selected_dataset = selected_dataset
+
+    # Show dataset info
+    if selected_dataset == "XuetangX":
+        st.caption("Large Chinese MOOC platform (212K+ pairs)")
+    else:
+        st.caption("Smaller English MOOC dataset (2.4K pairs)")
+
+    st.divider()
+
     st.markdown("### 📁 Project Info")
     st.info(f"**Repo Root:**\n`{REPO_ROOT}`")
 

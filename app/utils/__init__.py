@@ -17,6 +17,7 @@ from .data_loader import (
     load_maml_results,
     load_all_maml_results,
     compute_gap_statistics,
+    render_dataset_selector,
 )
 
 __all__ = [
@@ -36,4 +37,5 @@ __all__ = [
     "load_maml_results",
     "load_all_maml_results",
     "compute_gap_statistics",
+    "render_dataset_selector",
 ]
