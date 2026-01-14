@@ -15,6 +15,7 @@ from .data_loader import (
     load_vocab,
     load_baseline_results,
     load_maml_results,
+    load_all_maml_results,
     compute_gap_statistics,
 )
 
@@ -33,5 +34,6 @@ __all__ = [
     "load_vocab",
     "load_baseline_results",
     "load_maml_results",
+    "load_all_maml_results",
     "compute_gap_statistics",
 ]

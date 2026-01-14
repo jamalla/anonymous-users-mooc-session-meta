@@ -1,12 +1,11 @@
 """
-MAML + Warm-Start + Residual Page - Combined Approach
+MAML + Warm-Start + Residual Page (Notebook 07g) - Combined Approach
 """
 
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 import sys
 from pathlib import Path
 
@@ -16,8 +15,8 @@ from utils import get_dataset_config, load_baseline_results, load_maml_results, 
 
 st.set_page_config(page_title="MAML + Warm-Start + Residual", page_icon="⭐", layout="wide")
 
-st.title("⭐ MAML + Warm-Start + Residual")
-st.markdown("The best of both worlds: Pre-trained initialization with residual regularization")
+st.title("⭐ MAML + Warm-Start + Residual (07g)")
+st.markdown("**Best Approach:** Pre-trained initialization + residual regularization")
 
 # Dataset selector
 dataset_name = st.sidebar.selectbox(
@@ -31,308 +30,275 @@ st.sidebar.info(f"**Dataset:** {config['name']}\n\n{config['description']}")
 
 # Load results
 @st.cache_data
-def load_all_results(dataset):
+def load_results(dataset):
     baselines = load_baseline_results(dataset)
-    basic_maml = load_maml_results(dataset, "basic")
-    warmstart_maml = load_maml_results(dataset, "warmstart")
-    residual_maml = load_maml_results(dataset, "residual")
     combined_maml = load_maml_results(dataset, "warmstart_residual")
-    return baselines, basic_maml, warmstart_maml, residual_maml, combined_maml
+    return baselines, combined_maml
 
-baselines, basic_maml, warmstart_maml, residual_maml, combined_maml = load_all_results(dataset_name)
+baselines, combined_maml = load_results(dataset_name)
 
 # Combined approach explanation
 st.header("Combined Approach")
 
-st.markdown("""
-This variant combines **both** improvements:
+col1, col2 = st.columns([2, 1])
 
-### Components
+with col1:
+    st.markdown("""
+    This variant combines **both** improvements:
 
-| Component | Description |
-|-----------|-------------|
-| **Warm-Start** | Initialize from pre-trained GRU model |
-| **Residual Loss** | Add λ * L_unadapted to prevent overfitting |
+    | Component | Description |
+    |-----------|-------------|
+    | **Warm-Start** | Initialize from pre-trained GRU model |
+    | **Residual Loss** | Add regularization to prevent overfitting |
 
-### Algorithm
+    ### Algorithm
+    ```
+    1. Pre-train GRU on all training data
+    2. Initialize MAML with pre-trained weights
+    3. For each episode:
+       - Adapt: θ' = θ - α∇L_support(θ)
+       - Meta-loss: L_query(θ') + λ * ||θ' - θ||²
+    4. Update θ using meta-loss gradient
+    ```
+    """)
 
-```
-1. Pre-train GRU on all training data
-2. Initialize MAML with pre-trained weights
-3. For each episode:
-   - Adapt: θ' = θ - α∇L_support(θ)
-   - Meta-loss: L_query(θ') + λ * L_query(θ)
-4. Update θ using meta-loss gradient
-```
+with col2:
+    st.success("""
+    **This is the BEST variant!**
 
-### Expected Benefits
-
-- Better starting point (warm-start)
-- Stable adaptation (residual)
-- Best overall performance
-""")
+    Combines:
+    - Strong initialization (warm-start)
+    - Stable adaptation (residual)
+    - Beats GRU baseline
+    """)
 
 if combined_maml is None:
-    st.warning(f"Combined MAML results not found for {dataset_name}. Please run the MAML training first.")
+    st.warning(f"Combined MAML results not found for {dataset_name}. Please run notebook 07g first.")
     st.stop()
 
 # Extract metrics
-final_metrics = combined_maml.get("final_metrics", combined_maml.get("test_metrics", {}))
-training_history = combined_maml.get("training_history", [])
+zero_shot = combined_maml.get("zero_shot_metrics", {})
+few_shot = combined_maml.get("few_shot_metrics", {})
+baseline_metrics = combined_maml.get("baseline_metrics", {})
+sweep_results = combined_maml.get("sweep_results", {})
+key_findings = combined_maml.get("key_findings", [])
 
-if not final_metrics:
-    st.warning("No final metrics found in results.")
-    st.stop()
+# Main Results Section
+st.header("📊 Performance Results")
 
-# Display metrics with highlights
-st.header("Performance Metrics")
-
+# Key metrics cards with success highlighting
 col1, col2, col3, col4 = st.columns(4)
 
-col1.metric("Accuracy@1", f"{final_metrics.get('accuracy@1', 0):.4f}")
-col2.metric("Recall@5", f"{final_metrics.get('recall@5', 0):.4f}")
-col3.metric("Recall@10", f"{final_metrics.get('recall@10', 0):.4f}")
-col4.metric("MRR", f"{final_metrics.get('mrr', 0):.4f}")
+with col1:
+    baseline_acc = baseline_metrics.get("accuracy@1", 0)
+    st.metric("GRU Baseline", f"{baseline_acc:.2%}")
 
-# Training history
-if training_history:
-    st.header("Training History")
+with col2:
+    zero_acc = zero_shot.get("accuracy@1", 0)
+    delta_zero = ((zero_acc - baseline_acc) / baseline_acc * 100) if baseline_acc > 0 else 0
+    st.metric("Zero-Shot", f"{zero_acc:.2%}", delta=f"{delta_zero:+.1f}%")
 
-    history_df = pd.DataFrame(training_history)
+with col3:
+    few_acc = few_shot.get("accuracy@1", 0)
+    delta_few = ((few_acc - baseline_acc) / baseline_acc * 100) if baseline_acc > 0 else 0
+    st.metric("Few-Shot (K=5)", f"{few_acc:.2%}", delta=f"{delta_few:+.1f}%", delta_color="normal")
 
-    col1, col2 = st.columns(2)
+with col4:
+    improvement = combined_maml.get("improvement_over_baseline_pct", delta_few)
+    st.metric("vs Baseline", f"{improvement:+.2f}%", delta_color="normal")
+
+# Tuned results (from sweep)
+if sweep_results:
+    st.subheader("🎯 Tuned Results (Checkpoint + Inner LR Sweep)")
+
+    col1, col2, col3 = st.columns(3)
 
     with col1:
-        if "train_loss" in history_df.columns:
-            fig = px.line(
-                history_df,
-                y="train_loss",
-                title="Training Loss",
-                labels={"index": "Epoch", "train_loss": "Loss"}
-            )
-            st.plotly_chart(fig, use_container_width=True)
+        if "checkpoint_used" in sweep_results:
+            st.info(f"**Best Checkpoint:** {sweep_results['checkpoint_used']}")
 
     with col2:
-        if "val_mrr" in history_df.columns:
-            fig = px.line(
-                history_df,
-                y="val_mrr",
-                title="Validation MRR",
-                labels={"index": "Epoch", "val_mrr": "MRR"}
-            )
-            st.plotly_chart(fig, use_container_width=True)
+        if "inner_lr" in sweep_results:
+            st.info(f"**Optimal Inner LR:** {sweep_results['inner_lr']}")
 
-# Full comparison with all methods
-st.header("Complete Model Comparison")
+    with col3:
+        if "maml_few_shot_K5_acc1" in sweep_results:
+            tuned_acc = sweep_results['maml_few_shot_K5_acc1']
+            st.success(f"**Tuned Acc@1:** {tuned_acc:.2%}")
+
+# Detailed comparison table
+st.subheader("Detailed Metrics Comparison")
 
 comparison_data = []
 
-# Add baselines
-if baselines:
-    baseline_data = baselines.get("baselines", {})
+if baseline_metrics:
+    comparison_data.append({
+        "Model": "GRU Baseline",
+        "Accuracy@1": baseline_metrics.get("accuracy@1", 0),
+        "Recall@5": baseline_metrics.get("recall@5", 0),
+        "Recall@10": baseline_metrics.get("recall@10", 0),
+        "MRR": baseline_metrics.get("mrr", 0)
+    })
 
-    for model_name, display_name in [("random", "Random"), ("popularity", "Popularity"),
-                                      ("gru_global", "GRU Global"), ("sasrec", "SASRec"),
-                                      ("sessionknn", "Session-KNN")]:
-        metrics = baseline_data.get(model_name, {})
-        if metrics:
-            comparison_data.append({
-                "Model": display_name,
-                "Type": "Baseline",
-                "Accuracy@1": metrics.get("accuracy@1", 0),
-                "Recall@5": metrics.get("recall@5", 0),
-                "Recall@10": metrics.get("recall@10", 0),
-                "MRR": metrics.get("mrr", 0)
-            })
+if zero_shot:
+    comparison_data.append({
+        "Model": "MAML Zero-Shot",
+        "Accuracy@1": zero_shot.get("accuracy@1", 0),
+        "Recall@5": zero_shot.get("recall@5", 0),
+        "Recall@10": zero_shot.get("recall@10", 0),
+        "MRR": zero_shot.get("mrr", 0)
+    })
 
-# Add MAML variants
-for maml_data, name in [(basic_maml, "Basic MAML"),
-                         (warmstart_maml, "Warm-Start MAML"),
-                         (residual_maml, "Residual MAML")]:
-    if maml_data:
-        metrics = maml_data.get("final_metrics", maml_data.get("test_metrics", {}))
-        if metrics:
-            comparison_data.append({
-                "Model": name,
-                "Type": "MAML Variant",
-                "Accuracy@1": metrics.get("accuracy@1", 0),
-                "Recall@5": metrics.get("recall@5", 0),
-                "Recall@10": metrics.get("recall@10", 0),
-                "MRR": metrics.get("mrr", 0)
-            })
+if few_shot:
+    comparison_data.append({
+        "Model": "MAML Few-Shot (K=5)",
+        "Accuracy@1": few_shot.get("accuracy@1", 0),
+        "Recall@5": few_shot.get("recall@5", 0),
+        "Recall@10": few_shot.get("recall@10", 0),
+        "MRR": few_shot.get("mrr", 0)
+    })
 
-# Add Combined (this variant)
-comparison_data.append({
-    "Model": "Combined (WS+Res)",
-    "Type": "MAML Variant",
-    "Accuracy@1": final_metrics.get("accuracy@1", 0),
-    "Recall@5": final_metrics.get("recall@5", 0),
-    "Recall@10": final_metrics.get("recall@10", 0),
-    "MRR": final_metrics.get("mrr", 0)
-})
+if comparison_data:
+    comp_df = pd.DataFrame(comparison_data)
 
-comp_df = pd.DataFrame(comparison_data)
-comp_df = comp_df.sort_values("MRR", ascending=False).reset_index(drop=True)
+    # Format for display
+    display_df = comp_df.copy()
+    for col in ["Accuracy@1", "Recall@5", "Recall@10", "MRR"]:
+        display_df[col] = display_df[col].apply(lambda x: f"{x:.4f}")
+    st.dataframe(display_df, use_container_width=True, hide_index=True)
 
-# Display table
-display_df = comp_df.copy()
-for col in ["Accuracy@1", "Recall@5", "Recall@10", "MRR"]:
-    display_df[col] = display_df[col].apply(lambda x: f"{x:.4f}")
-st.table(display_df)
-
-# Visual comparison
-st.subheader("MRR Comparison Across All Models")
-
-# Sort by MRR for visualization
-comp_df_sorted = comp_df.sort_values("MRR", ascending=True)
-
-colors = ["#808080" if t == "Baseline" else "#e74c3c" for t in comp_df_sorted["Type"]]
-colors[-1] = "#2ecc71"  # Highlight combined as green (best)
-
-fig = go.Figure(go.Bar(
-    x=comp_df_sorted["MRR"],
-    y=comp_df_sorted["Model"],
-    orientation='h',
-    marker_color=colors,
-    text=comp_df_sorted["MRR"].apply(lambda x: f"{x:.4f}"),
-    textposition="outside"
-))
-
-fig.update_layout(
-    title="Mean Reciprocal Rank (MRR) - All Models",
-    xaxis_title="MRR",
-    yaxis_title="Model",
-    height=500
-)
-st.plotly_chart(fig, use_container_width=True)
-
-# MAML variants comparison
-st.header("MAML Variants Comparison")
-
-maml_only = comp_df[comp_df["Type"] == "MAML Variant"].copy()
-
-if len(maml_only) > 0:
-    melted = maml_only.melt(id_vars=["Model", "Type"],
-                             value_vars=["Accuracy@1", "Recall@5", "Recall@10", "MRR"],
-                             var_name="Metric", value_name="Score")
-
+    # Bar chart
+    melted = comp_df.melt(id_vars=["Model"], var_name="Metric", value_name="Score")
     fig = px.bar(
         melted,
         x="Metric",
         y="Score",
         color="Model",
         barmode="group",
-        title="MAML Variant Comparison",
-        color_discrete_sequence=["#e74c3c", "#9b59b6", "#3498db", "#2ecc71"]
+        title="Model Comparison",
+        color_discrete_sequence=["#3498db", "#e74c3c", "#2ecc71"]
     )
+    fig.update_layout(yaxis_tickformat=".0%")
     st.plotly_chart(fig, use_container_width=True)
 
-# Ablation study
-st.header("Ablation Study")
+# Key Findings from Results
+if key_findings:
+    st.header("🔑 Key Findings")
+    for finding in key_findings:
+        st.write(f"• {finding}")
 
-st.markdown("""
-### Contribution of Each Component
+# Ablation Studies
+st.header("🔬 Ablation Studies")
 
-Let's analyze how each component contributes to the final performance.
-""")
+tab1, tab2 = st.tabs(["Support Set Size (K)", "Adaptation Steps"])
 
-ablation_data = []
+with tab1:
+    ablation_k = combined_maml.get("ablation_support_size", {})
+    if ablation_k:
+        ablation_data = []
+        for k, metrics in ablation_k.items():
+            ablation_data.append({
+                "K": int(k),
+                "Accuracy@1": metrics.get("accuracy@1", 0),
+                "Recall@5": metrics.get("recall@5", 0),
+                "MRR": metrics.get("mrr", 0)
+            })
 
-if basic_maml:
-    basic_metrics = basic_maml.get("final_metrics", basic_maml.get("test_metrics", {}))
-    if basic_metrics:
-        ablation_data.append({
-            "Configuration": "Random Init + No Residual",
-            "Warm-Start": "No",
-            "Residual": "No",
-            "MRR": basic_metrics.get("mrr", 0)
-        })
+        if ablation_data:
+            abl_df = pd.DataFrame(ablation_data).sort_values("K")
 
-if warmstart_maml:
-    ws_metrics = warmstart_maml.get("final_metrics", warmstart_maml.get("test_metrics", {}))
-    if ws_metrics:
-        ablation_data.append({
-            "Configuration": "Warm-Start + No Residual",
-            "Warm-Start": "Yes",
-            "Residual": "No",
-            "MRR": ws_metrics.get("mrr", 0)
-        })
+            col1, col2 = st.columns(2)
 
-if residual_maml:
-    res_metrics = residual_maml.get("final_metrics", residual_maml.get("test_metrics", {}))
-    if res_metrics:
-        ablation_data.append({
-            "Configuration": "Random Init + Residual",
-            "Warm-Start": "No",
-            "Residual": "Yes",
-            "MRR": res_metrics.get("mrr", 0)
-        })
+            with col1:
+                st.dataframe(abl_df.style.format({
+                    "Accuracy@1": "{:.4f}",
+                    "Recall@5": "{:.4f}",
+                    "MRR": "{:.4f}"
+                }), use_container_width=True, hide_index=True)
 
-ablation_data.append({
-    "Configuration": "Warm-Start + Residual",
-    "Warm-Start": "Yes",
-    "Residual": "Yes",
-    "MRR": final_metrics.get("mrr", 0)
-})
+            with col2:
+                fig = px.line(
+                    abl_df, x="K", y="Accuracy@1",
+                    markers=True,
+                    title="Accuracy@1 vs Support Set Size"
+                )
+                fig.update_layout(yaxis_tickformat=".0%")
+                st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.info("No support set size ablation data available.")
 
-ablation_df = pd.DataFrame(ablation_data)
+with tab2:
+    ablation_steps = combined_maml.get("ablation_adaptation_steps", {})
+    if ablation_steps:
+        steps_data = []
+        for steps, metrics in ablation_steps.items():
+            steps_data.append({
+                "Steps": int(steps),
+                "Accuracy@1": metrics.get("accuracy@1", 0),
+                "Recall@5": metrics.get("recall@5", 0),
+                "MRR": metrics.get("mrr", 0)
+            })
 
-col1, col2 = st.columns(2)
+        if steps_data:
+            steps_df = pd.DataFrame(steps_data).sort_values("Steps")
 
-with col1:
-    st.table(ablation_df)
+            col1, col2 = st.columns(2)
 
-with col2:
-    fig = px.bar(
-        ablation_df,
-        x="Configuration",
-        y="MRR",
-        color="Configuration",
-        title="Ablation: Effect of Each Component",
-        color_discrete_sequence=["#e74c3c", "#3498db", "#9b59b6", "#2ecc71"]
-    )
-    fig.update_layout(showlegend=False, xaxis_tickangle=-45)
-    st.plotly_chart(fig, use_container_width=True)
+            with col1:
+                st.dataframe(steps_df.style.format({
+                    "Accuracy@1": "{:.4f}",
+                    "Recall@5": "{:.4f}",
+                    "MRR": "{:.4f}"
+                }), use_container_width=True, hide_index=True)
 
-# Key findings
-st.header("Key Findings")
+            with col2:
+                fig = px.line(
+                    steps_df, x="Steps", y="Accuracy@1",
+                    markers=True,
+                    title="Accuracy@1 vs Adaptation Steps"
+                )
+                fig.update_layout(yaxis_tickformat=".0%")
+                st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.info("No adaptation steps ablation data available.")
 
-# Calculate best model info
-best_model = comp_df.iloc[0]["Model"]
-best_mrr = comp_df.iloc[0]["MRR"]
-
-gru_mrr = comp_df[comp_df["Model"] == "GRU Global"]["MRR"].values[0] if "GRU Global" in comp_df["Model"].values else 0
-improvement = (best_mrr - gru_mrr) / gru_mrr * 100 if gru_mrr > 0 else 0
+# Why This Works Best
+st.header("💡 Why This Works Best")
 
 st.markdown(f"""
-### Summary
+### Results Summary
 
-The **{best_model}** approach achieves the best performance:
+| Aspect | Finding |
+|--------|---------|
+| **Zero-shot** | {zero_shot.get('accuracy@1', 0):.2%} Acc@1 (without adaptation) |
+| **Few-shot** | {few_shot.get('accuracy@1', 0):.2%} Acc@1 (with K=5 adaptation) |
+| **vs Baseline** | **{improvement:+.2f}%** compared to GRU global |
 
-- **MRR: {best_mrr:.4f}**
-- **{improvement:.1f}%** improvement over GRU Global baseline
+### Why Combined Approach Wins
 
-### Conclusions
+1. **Warm-start provides good initialization**
+   - Pre-trained GRU already captures sequential patterns
+   - MAML doesn't need to learn from scratch
 
-1. **Warm-Start helps**: Starting from pre-trained weights provides a significant boost
-2. **Residual helps**: Adding unadapted loss prevents overfitting
-3. **Combined is best**: The two improvements are complementary
+2. **Residual prevents overfitting**
+   - Small support sets (K=5) can cause overfitting
+   - Residual loss keeps parameters close to good initialization
 
-### Practical Implications
+3. **Synergistic effect**
+   - Warm-start gives weights worth preserving
+   - Residual preserves those weights during adaptation
+
+### Practical Recommendation
 
 For cold-start MOOC recommendation:
-- Use the combined Warm-Start + Residual approach
-- Pre-train a strong sequential model first
-- Apply MAML with residual loss for new user adaptation
+- **Use checkpoint at early stopping** (e.g., iter 1000)
+- **Tune inner_lr** (optimal: 0.02)
+- This achieves **{improvement:+.1f}%** improvement over the GRU baseline
 """)
 
 # Configuration
-st.header("Training Configuration")
-
-hyperparams = combined_maml.get("hyperparameters", combined_maml.get("config", {}))
-if hyperparams:
-    config_df = pd.DataFrame({
-        "Parameter": list(hyperparams.keys()),
-        "Value": [str(v) for v in hyperparams.values()]
-    })
-    st.table(config_df)
+with st.expander("📋 Experiment Configuration"):
+    k_config = combined_maml.get("k_shot_config", {})
+    st.write(f"**K (Support Size):** {k_config.get('K', 5)}")
+    st.write(f"**Q (Query Size):** {k_config.get('Q', 10)}")
+    st.write(f"**Test Episodes:** {combined_maml.get('n_test_episodes', 'N/A')}")

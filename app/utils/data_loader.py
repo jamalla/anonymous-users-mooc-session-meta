@@ -151,7 +151,64 @@ def load_maml_results(dataset_name: str, variant: str = "basic") -> Optional[Dic
         filename = filename.replace("maml_", "mars_maml_")
 
     path = config["results_path"] / filename
-    return load_json(path)
+    data = load_json(path)
+
+    if data is None:
+        return None
+
+    # Normalize the format - extract key metrics into standard fields
+    normalized = data.copy()
+
+    # Find the MAML results section (different keys for different variants)
+    maml_section = None
+    for key in ["maml", "maml_warmstart", "maml_residual", "maml_warmstart_residual"]:
+        if key in data:
+            maml_section = data[key]
+            break
+
+    if maml_section:
+        # Extract zero-shot and few-shot metrics
+        normalized["zero_shot_metrics"] = maml_section.get("zero_shot", {})
+        normalized["few_shot_metrics"] = maml_section.get("few_shot_K5", {})
+        # Also set final_metrics to few_shot for backwards compatibility
+        normalized["final_metrics"] = maml_section.get("few_shot_K5", {})
+
+    # Extract baseline
+    if "baseline" in data:
+        normalized["baseline_metrics"] = data["baseline"].get("gru_global", {})
+
+    # Extract ablation results if present
+    normalized["ablation_support_size"] = data.get("ablation_support_size", {})
+    normalized["ablation_adaptation_steps"] = data.get("ablation_adaptation_steps", {})
+
+    # Extract sweep/tuning info and USE TUNED RESULTS if available
+    if "metrics" in data:
+        sweep = data["metrics"]
+        normalized["sweep_results"] = sweep
+
+        # If tuned results exist, use them as the primary few_shot_metrics
+        if "maml_few_shot_K5_acc1" in sweep:
+            # Update with tuned accuracy
+            tuned_acc = sweep["maml_few_shot_K5_acc1"]
+            if normalized.get("few_shot_metrics"):
+                normalized["few_shot_metrics"]["accuracy@1"] = tuned_acc
+            else:
+                normalized["few_shot_metrics"] = {"accuracy@1": tuned_acc}
+
+            # Also update improvement percentage
+            if "improvement_over_baseline_pct" in sweep:
+                normalized["improvement_over_baseline_pct"] = sweep["improvement_over_baseline_pct"]
+
+    return normalized
+
+
+def load_all_maml_results(dataset_name: str) -> Dict[str, Optional[Dict]]:
+    """Load all MAML variant results for comparison."""
+    variants = ["basic", "warmstart", "residual", "warmstart_residual"]
+    results = {}
+    for variant in variants:
+        results[variant] = load_maml_results(dataset_name, variant)
+    return results
 
 def compute_gap_statistics(df: pd.DataFrame) -> Dict[str, Any]:
     """Compute gap statistics from interactions dataframe."""

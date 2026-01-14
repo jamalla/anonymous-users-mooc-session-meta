@@ -1,5 +1,5 @@
 """
-MAML + Residual Page
+MAML + Residual Page (Notebook 07f)
 """
 
 import streamlit as st
@@ -13,10 +13,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from utils import get_dataset_config, load_baseline_results, load_maml_results, DATASETS
 
-st.set_page_config(page_title="MAML + Residual", page_icon="🔁", layout="wide")
+st.set_page_config(page_title="MAML + Residual", page_icon="🔄", layout="wide")
 
-st.title("🔁 MAML + Residual")
-st.markdown("Meta-Learning with residual (unadapted) loss regularization")
+st.title("🔄 MAML + Residual Loss (07f)")
+st.markdown("Meta-Learning with residual loss regularization (random init)")
 
 # Dataset selector
 dataset_name = st.sidebar.selectbox(
@@ -30,222 +30,232 @@ st.sidebar.info(f"**Dataset:** {config['name']}\n\n{config['description']}")
 
 # Load results
 @st.cache_data
-def load_all_results(dataset):
+def load_results(dataset):
     baselines = load_baseline_results(dataset)
-    basic_maml = load_maml_results(dataset, "basic")
     residual_maml = load_maml_results(dataset, "residual")
-    return baselines, basic_maml, residual_maml
+    return baselines, residual_maml
 
-baselines, basic_maml, residual_maml = load_all_results(dataset_name)
+baselines, residual_maml = load_results(dataset_name)
 
 # Residual explanation
-st.header("What is Residual MAML?")
+st.header("What is Residual Loss MAML?")
 
-st.markdown("""
-**Residual MAML** adds a regularization term using the unadapted (initial) model's loss.
+col1, col2 = st.columns([2, 1])
 
-### Motivation
+with col1:
+    st.markdown("""
+    **Residual Loss** adds a regularization term to prevent overfitting during inner-loop adaptation.
 
-- Standard MAML may overfit to specific users during adaptation
-- The initial model (before adaptation) contains valuable global knowledge
-- Adding an unadapted loss term helps prevent overfitting
+    ### How It Works
+    The loss function becomes:
+    ```
+    L_total = L_task + λ * ||θ_adapted - θ_init||²
+    ```
 
-### Loss Function
+    Where:
+    - `L_task`: Standard cross-entropy loss on support set
+    - `λ`: Residual weight (typically 0.1)
+    - The second term penalizes large parameter changes
 
-```
-L_total = L_adapted + λ * L_unadapted
-```
+    ### Benefits
+    - Prevents overfitting to small support sets
+    - Keeps adapted parameters close to initialization
+    - More stable adaptation
+    """)
 
-Where:
-- `L_adapted`: Loss after K gradient steps on support set
-- `L_unadapted`: Loss with initial (non-adapted) parameters
-- `λ = 0.1`: Residual loss weight
+with col2:
+    st.warning("""
+    **Note: Random Initialization**
 
-### Benefits
-
-- Prevents overfitting to small support sets
-- Maintains global knowledge during adaptation
-- More robust to noisy support examples
-""")
+    This variant uses **random initialization** (not pre-trained).
+    For best results, combine with warm-start (see 07g).
+    """)
 
 if residual_maml is None:
-    st.warning(f"Residual MAML results not found for {dataset_name}. Please run the MAML training first.")
+    st.warning(f"Residual MAML results not found for {dataset_name}. Please run notebook 07f first.")
     st.stop()
 
 # Extract metrics
-final_metrics = residual_maml.get("final_metrics", residual_maml.get("test_metrics", {}))
-training_history = residual_maml.get("training_history", [])
+zero_shot = residual_maml.get("zero_shot_metrics", {})
+few_shot = residual_maml.get("few_shot_metrics", {})
+baseline_metrics = residual_maml.get("baseline_metrics", {})
 
-if not final_metrics:
-    st.warning("No final metrics found in results.")
-    st.stop()
+# Main Results Section
+st.header("📊 Performance Results")
 
-# Display metrics
-st.header("Performance Metrics")
-
+# Key metrics cards
 col1, col2, col3, col4 = st.columns(4)
 
-col1.metric("Accuracy@1", f"{final_metrics.get('accuracy@1', 0):.4f}")
-col2.metric("Recall@5", f"{final_metrics.get('recall@5', 0):.4f}")
-col3.metric("Recall@10", f"{final_metrics.get('recall@10', 0):.4f}")
-col4.metric("MRR", f"{final_metrics.get('mrr', 0):.4f}")
+with col1:
+    baseline_acc = baseline_metrics.get("accuracy@1", 0)
+    st.metric("GRU Baseline", f"{baseline_acc:.2%}")
 
-# Training history
-if training_history:
-    st.header("Training History")
+with col2:
+    zero_acc = zero_shot.get("accuracy@1", 0)
+    delta_zero = ((zero_acc - baseline_acc) / baseline_acc * 100) if baseline_acc > 0 else 0
+    st.metric("Zero-Shot", f"{zero_acc:.2%}", delta=f"{delta_zero:+.1f}%")
 
-    history_df = pd.DataFrame(training_history)
+with col3:
+    few_acc = few_shot.get("accuracy@1", 0)
+    delta_few = ((few_acc - baseline_acc) / baseline_acc * 100) if baseline_acc > 0 else 0
+    st.metric("Few-Shot (K=5)", f"{few_acc:.2%}", delta=f"{delta_few:+.1f}%")
 
-    col1, col2 = st.columns(2)
+with col4:
+    improvement = residual_maml.get("improvement_over_baseline_pct", delta_few)
+    st.metric("vs Baseline", f"{improvement:+.2f}%")
 
-    with col1:
-        if "train_loss" in history_df.columns:
-            fig = px.line(
-                history_df,
-                y="train_loss",
-                title="Training Loss",
-                labels={"index": "Epoch", "train_loss": "Loss"}
-            )
-            st.plotly_chart(fig, use_container_width=True)
-
-    with col2:
-        if "val_mrr" in history_df.columns:
-            fig = px.line(
-                history_df,
-                y="val_mrr",
-                title="Validation MRR",
-                labels={"index": "Epoch", "val_mrr": "MRR"}
-            )
-            st.plotly_chart(fig, use_container_width=True)
-
-# Comparison with other methods
-st.header("Comparison with Other Methods")
+# Detailed comparison table
+st.subheader("Detailed Metrics Comparison")
 
 comparison_data = []
 
-# Add baselines
-if baselines:
-    baseline_data = baselines.get("baselines", {})
-    gru_metrics = baseline_data.get("gru_global", {})
-    if gru_metrics:
-        comparison_data.append({
-            "Model": "GRU Global",
-            "Accuracy@1": gru_metrics.get("accuracy@1", 0),
-            "Recall@5": gru_metrics.get("recall@5", 0),
-            "Recall@10": gru_metrics.get("recall@10", 0),
-            "MRR": gru_metrics.get("mrr", 0)
-        })
+if baseline_metrics:
+    comparison_data.append({
+        "Model": "GRU Baseline",
+        "Accuracy@1": baseline_metrics.get("accuracy@1", 0),
+        "Recall@5": baseline_metrics.get("recall@5", 0),
+        "Recall@10": baseline_metrics.get("recall@10", 0),
+        "MRR": baseline_metrics.get("mrr", 0)
+    })
 
-# Add Basic MAML
-if basic_maml:
-    basic_metrics = basic_maml.get("final_metrics", basic_maml.get("test_metrics", {}))
-    if basic_metrics:
-        comparison_data.append({
-            "Model": "Basic MAML",
-            "Accuracy@1": basic_metrics.get("accuracy@1", 0),
-            "Recall@5": basic_metrics.get("recall@5", 0),
-            "Recall@10": basic_metrics.get("recall@10", 0),
-            "MRR": basic_metrics.get("mrr", 0)
-        })
+if zero_shot:
+    comparison_data.append({
+        "Model": "MAML Zero-Shot",
+        "Accuracy@1": zero_shot.get("accuracy@1", 0),
+        "Recall@5": zero_shot.get("recall@5", 0),
+        "Recall@10": zero_shot.get("recall@10", 0),
+        "MRR": zero_shot.get("mrr", 0)
+    })
 
-# Add Residual MAML
-comparison_data.append({
-    "Model": "Residual MAML",
-    "Accuracy@1": final_metrics.get("accuracy@1", 0),
-    "Recall@5": final_metrics.get("recall@5", 0),
-    "Recall@10": final_metrics.get("recall@10", 0),
-    "MRR": final_metrics.get("mrr", 0)
-})
+if few_shot:
+    comparison_data.append({
+        "Model": "MAML Few-Shot (K=5)",
+        "Accuracy@1": few_shot.get("accuracy@1", 0),
+        "Recall@5": few_shot.get("recall@5", 0),
+        "Recall@10": few_shot.get("recall@10", 0),
+        "MRR": few_shot.get("mrr", 0)
+    })
 
-comp_df = pd.DataFrame(comparison_data)
+if comparison_data:
+    comp_df = pd.DataFrame(comparison_data)
 
-# Display table
-display_df = comp_df.copy()
-for col in ["Accuracy@1", "Recall@5", "Recall@10", "MRR"]:
-    display_df[col] = display_df[col].apply(lambda x: f"{x:.4f}")
-st.table(display_df)
+    # Format for display
+    display_df = comp_df.copy()
+    for col in ["Accuracy@1", "Recall@5", "Recall@10", "MRR"]:
+        display_df[col] = display_df[col].apply(lambda x: f"{x:.4f}")
+    st.dataframe(display_df, use_container_width=True, hide_index=True)
 
-# Bar chart comparison
-melted = comp_df.melt(id_vars=["Model"], var_name="Metric", value_name="Score")
-fig = px.bar(
-    melted,
-    x="Metric",
-    y="Score",
-    color="Model",
-    barmode="group",
-    title="Model Comparison",
-    color_discrete_sequence=["#3498db", "#e74c3c", "#9b59b6"]
-)
-st.plotly_chart(fig, use_container_width=True)
+    # Bar chart
+    melted = comp_df.melt(id_vars=["Model"], var_name="Metric", value_name="Score")
+    fig = px.bar(
+        melted,
+        x="Metric",
+        y="Score",
+        color="Model",
+        barmode="group",
+        title="Model Comparison",
+        color_discrete_sequence=["#3498db", "#e74c3c", "#9b59b6"]
+    )
+    fig.update_layout(yaxis_tickformat=".0%")
+    st.plotly_chart(fig, use_container_width=True)
 
-# Improvement over Basic MAML
-if basic_maml:
-    basic_metrics = basic_maml.get("final_metrics", basic_maml.get("test_metrics", {}))
-    if basic_metrics:
-        st.subheader("Improvement over Basic MAML")
+# Ablation Studies
+st.header("🔬 Ablation Studies")
 
-        improvements = {}
-        for metric in ["accuracy@1", "recall@5", "recall@10", "mrr"]:
-            basic_val = basic_metrics.get(metric, 0)
-            residual_val = final_metrics.get(metric, 0)
-            if basic_val > 0:
-                pct_change = (residual_val - basic_val) / basic_val * 100
-                improvements[metric] = pct_change
+tab1, tab2 = st.tabs(["Support Set Size (K)", "Adaptation Steps"])
 
-        if improvements:
-            col1, col2, col3, col4 = st.columns(4)
+with tab1:
+    ablation_k = residual_maml.get("ablation_support_size", {})
+    if ablation_k:
+        ablation_data = []
+        for k, metrics in ablation_k.items():
+            ablation_data.append({
+                "K": int(k),
+                "Accuracy@1": metrics.get("accuracy@1", 0),
+                "Recall@5": metrics.get("recall@5", 0),
+                "MRR": metrics.get("mrr", 0)
+            })
+
+        if ablation_data:
+            abl_df = pd.DataFrame(ablation_data).sort_values("K")
+
+            col1, col2 = st.columns(2)
 
             with col1:
-                delta = improvements.get("accuracy@1", 0)
-                st.metric("Accuracy@1", f"{final_metrics.get('accuracy@1', 0):.4f}",
-                         delta=f"{delta:+.1f}%")
+                st.dataframe(abl_df.style.format({
+                    "Accuracy@1": "{:.4f}",
+                    "Recall@5": "{:.4f}",
+                    "MRR": "{:.4f}"
+                }), use_container_width=True, hide_index=True)
 
             with col2:
-                delta = improvements.get("recall@5", 0)
-                st.metric("Recall@5", f"{final_metrics.get('recall@5', 0):.4f}",
-                         delta=f"{delta:+.1f}%")
+                fig = px.line(
+                    abl_df, x="K", y="Accuracy@1",
+                    markers=True,
+                    title="Accuracy@1 vs Support Set Size"
+                )
+                fig.update_layout(yaxis_tickformat=".0%")
+                st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.info("No support set size ablation data available.")
 
-            with col3:
-                delta = improvements.get("recall@10", 0)
-                st.metric("Recall@10", f"{final_metrics.get('recall@10', 0):.4f}",
-                         delta=f"{delta:+.1f}%")
+with tab2:
+    ablation_steps = residual_maml.get("ablation_adaptation_steps", {})
+    if ablation_steps:
+        steps_data = []
+        for steps, metrics in ablation_steps.items():
+            steps_data.append({
+                "Steps": int(steps),
+                "Accuracy@1": metrics.get("accuracy@1", 0),
+                "Recall@5": metrics.get("recall@5", 0),
+                "MRR": metrics.get("mrr", 0)
+            })
 
-            with col4:
-                delta = improvements.get("mrr", 0)
-                st.metric("MRR", f"{final_metrics.get('mrr', 0):.4f}",
-                         delta=f"{delta:+.1f}%")
+        if steps_data:
+            steps_df = pd.DataFrame(steps_data).sort_values("Steps")
 
-# Key insights
-st.header("Key Insights")
+            col1, col2 = st.columns(2)
 
-st.markdown("""
-### Residual Loss Benefits
+            with col1:
+                st.dataframe(steps_df.style.format({
+                    "Accuracy@1": "{:.4f}",
+                    "Recall@5": "{:.4f}",
+                    "MRR": "{:.4f}"
+                }), use_container_width=True, hide_index=True)
 
-1. **Regularization**: Prevents the model from drifting too far during adaptation
-2. **Global Knowledge**: Maintains useful patterns from initial training
-3. **Robustness**: More stable when support set is noisy or small
+            with col2:
+                fig = px.line(
+                    steps_df, x="Steps", y="Accuracy@1",
+                    markers=True,
+                    title="Accuracy@1 vs Adaptation Steps"
+                )
+                fig.update_layout(yaxis_tickformat=".0%")
+                st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.info("No adaptation steps ablation data available.")
 
-### Lambda Parameter (λ = 0.1)
+# Key Insights
+st.header("💡 Key Insights")
 
-The λ parameter controls the trade-off:
-- **λ = 0**: Pure MAML (no residual)
-- **λ = 1**: Equal weight to adapted and unadapted
-- **λ = 0.1**: Light regularization (our choice)
+st.markdown(f"""
+### Results Summary
 
-### When Residual Helps
+| Aspect | Finding |
+|--------|---------|
+| **Zero-shot** | {zero_shot.get('accuracy@1', 0):.2%} Acc@1 (without adaptation) |
+| **Few-shot** | {few_shot.get('accuracy@1', 0):.2%} Acc@1 (with K=5 adaptation) |
+| **vs Baseline** | {improvement:+.2f}% compared to GRU global |
 
-- Small support sets (K ≤ 5)
-- Noisy or inconsistent user behavior
-- When preventing overfitting is important
+### Observations
+
+1. **Random init limits performance** - Without pre-training, the model starts from a weaker position
+2. **Residual helps stability** - Prevents overfitting during adaptation
+3. **Combine with warm-start** - For best results, use warm-start + residual (07g)
 """)
 
 # Configuration
-st.header("Training Configuration")
-
-hyperparams = residual_maml.get("hyperparameters", residual_maml.get("config", {}))
-if hyperparams:
-    config_df = pd.DataFrame({
-        "Parameter": list(hyperparams.keys()),
-        "Value": [str(v) for v in hyperparams.values()]
-    })
-    st.table(config_df)
+with st.expander("📋 Experiment Configuration"):
+    k_config = residual_maml.get("k_shot_config", {})
+    st.write(f"**K (Support Size):** {k_config.get('K', 5)}")
+    st.write(f"**Q (Query Size):** {k_config.get('Q', 10)}")
+    st.write(f"**Test Episodes:** {residual_maml.get('n_test_episodes', 'N/A')}")

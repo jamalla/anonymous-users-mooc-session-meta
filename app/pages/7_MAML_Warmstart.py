@@ -1,5 +1,5 @@
 """
-MAML + Warm-Start Page
+MAML + Warm-Start Page (Notebook 07e)
 """
 
 import streamlit as st
@@ -13,9 +13,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from utils import get_dataset_config, load_baseline_results, load_maml_results, DATASETS
 
-st.set_page_config(page_title="MAML + Warm-Start", page_icon="🚀", layout="wide")
+st.set_page_config(page_title="MAML + Warm-Start", page_icon="🔥", layout="wide")
 
-st.title("🚀 MAML + Warm-Start")
+st.title("🔥 MAML + Warm-Start (07e)")
 st.markdown("Meta-Learning initialized from pre-trained GRU baseline")
 
 # Dataset selector
@@ -30,211 +30,246 @@ st.sidebar.info(f"**Dataset:** {config['name']}\n\n{config['description']}")
 
 # Load results
 @st.cache_data
-def load_all_results(dataset):
+def load_results(dataset):
     baselines = load_baseline_results(dataset)
-    basic_maml = load_maml_results(dataset, "basic")
     warmstart_maml = load_maml_results(dataset, "warmstart")
-    return baselines, basic_maml, warmstart_maml
+    return baselines, warmstart_maml
 
-baselines, basic_maml, warmstart_maml = load_all_results(dataset_name)
+baselines, warmstart_maml = load_results(dataset_name)
 
 # Warm-start explanation
 st.header("What is Warm-Start MAML?")
 
-st.markdown("""
-**Warm-Start** initializes MAML from a pre-trained model instead of random weights.
+col1, col2 = st.columns([2, 1])
 
-### Motivation
+with col1:
+    st.markdown("""
+    **Warm-Start** initializes MAML from a pre-trained model instead of random weights.
 
-- Basic MAML starts from random initialization
-- Training from scratch is challenging and may converge slowly
-- Pre-trained models already capture useful sequential patterns
+    ### Approach
+    1. **Pre-train** a GRU model on all training data (global model)
+    2. **Initialize** MAML with pre-trained GRU weights
+    3. **Meta-train** using MAML algorithm to learn good initialization
+    4. **Adapt** to new users with few gradient steps
 
-### Approach
+    ### Benefits
+    - Faster convergence during meta-training
+    - Leverages knowledge from global training
+    - Better starting point than random initialization
+    """)
 
-1. **Pre-train** a GRU model on all training data
-2. **Initialize** MAML with pre-trained weights
-3. **Meta-train** using the MAML algorithm
-4. **Adapt** to new users
+with col2:
+    st.info("""
+    **Key Insight**
 
-### Benefits
-
-- Faster convergence
-- Better starting point for meta-learning
-- Leverages knowledge from global training
-""")
+    Pre-trained weights capture global sequential patterns.
+    MAML learns to fine-tune these patterns for individual users.
+    """)
 
 if warmstart_maml is None:
-    st.warning(f"Warm-Start MAML results not found for {dataset_name}. Please run the MAML training first.")
+    st.warning(f"Warm-Start MAML results not found for {dataset_name}. Please run notebook 07e first.")
     st.stop()
 
 # Extract metrics
-final_metrics = warmstart_maml.get("final_metrics", warmstart_maml.get("test_metrics", {}))
-training_history = warmstart_maml.get("training_history", [])
+zero_shot = warmstart_maml.get("zero_shot_metrics", {})
+few_shot = warmstart_maml.get("few_shot_metrics", {})
+baseline_metrics = warmstart_maml.get("baseline_metrics", {})
+sweep_results = warmstart_maml.get("sweep_results", {})
 
-if not final_metrics:
-    st.warning("No final metrics found in results.")
-    st.stop()
+# Main Results Section
+st.header("📊 Performance Results")
 
-# Display metrics
-st.header("Performance Metrics")
-
+# Key metrics cards
 col1, col2, col3, col4 = st.columns(4)
 
-col1.metric("Accuracy@1", f"{final_metrics.get('accuracy@1', 0):.4f}")
-col2.metric("Recall@5", f"{final_metrics.get('recall@5', 0):.4f}")
-col3.metric("Recall@10", f"{final_metrics.get('recall@10', 0):.4f}")
-col4.metric("MRR", f"{final_metrics.get('mrr', 0):.4f}")
+with col1:
+    baseline_acc = baseline_metrics.get("accuracy@1", 0)
+    st.metric("GRU Baseline", f"{baseline_acc:.2%}")
 
-# Training history
-if training_history:
-    st.header("Training History")
+with col2:
+    zero_acc = zero_shot.get("accuracy@1", 0)
+    delta_zero = ((zero_acc - baseline_acc) / baseline_acc * 100) if baseline_acc > 0 else 0
+    st.metric("Zero-Shot", f"{zero_acc:.2%}", delta=f"{delta_zero:+.1f}%")
 
-    history_df = pd.DataFrame(training_history)
+with col3:
+    few_acc = few_shot.get("accuracy@1", 0)
+    delta_few = ((few_acc - baseline_acc) / baseline_acc * 100) if baseline_acc > 0 else 0
+    st.metric("Few-Shot (K=5)", f"{few_acc:.2%}", delta=f"{delta_few:+.1f}%")
+
+with col4:
+    improvement = warmstart_maml.get("improvement_over_baseline_pct", delta_few)
+    st.metric("vs Baseline", f"{improvement:+.2f}%")
+
+# Detailed comparison table
+st.subheader("Detailed Metrics Comparison")
+
+comparison_data = []
+
+if baseline_metrics:
+    comparison_data.append({
+        "Model": "GRU Baseline",
+        "Accuracy@1": baseline_metrics.get("accuracy@1", 0),
+        "Recall@5": baseline_metrics.get("recall@5", 0),
+        "Recall@10": baseline_metrics.get("recall@10", 0),
+        "MRR": baseline_metrics.get("mrr", 0)
+    })
+
+if zero_shot:
+    comparison_data.append({
+        "Model": "MAML Zero-Shot",
+        "Accuracy@1": zero_shot.get("accuracy@1", 0),
+        "Recall@5": zero_shot.get("recall@5", 0),
+        "Recall@10": zero_shot.get("recall@10", 0),
+        "MRR": zero_shot.get("mrr", 0)
+    })
+
+if few_shot:
+    comparison_data.append({
+        "Model": "MAML Few-Shot (K=5)",
+        "Accuracy@1": few_shot.get("accuracy@1", 0),
+        "Recall@5": few_shot.get("recall@5", 0),
+        "Recall@10": few_shot.get("recall@10", 0),
+        "MRR": few_shot.get("mrr", 0)
+    })
+
+if comparison_data:
+    comp_df = pd.DataFrame(comparison_data)
+
+    # Format for display
+    display_df = comp_df.copy()
+    for col in ["Accuracy@1", "Recall@5", "Recall@10", "MRR"]:
+        display_df[col] = display_df[col].apply(lambda x: f"{x:.4f}")
+    st.dataframe(display_df, use_container_width=True, hide_index=True)
+
+    # Bar chart
+    melted = comp_df.melt(id_vars=["Model"], var_name="Metric", value_name="Score")
+    fig = px.bar(
+        melted,
+        x="Metric",
+        y="Score",
+        color="Model",
+        barmode="group",
+        title="Model Comparison",
+        color_discrete_sequence=["#3498db", "#e74c3c", "#2ecc71"]
+    )
+    fig.update_layout(yaxis_tickformat=".0%")
+    st.plotly_chart(fig, use_container_width=True)
+
+# Ablation Studies
+st.header("🔬 Ablation Studies")
+
+tab1, tab2 = st.tabs(["Support Set Size (K)", "Adaptation Steps"])
+
+with tab1:
+    ablation_k = warmstart_maml.get("ablation_support_size", {})
+    if ablation_k:
+        ablation_data = []
+        for k, metrics in ablation_k.items():
+            ablation_data.append({
+                "K": int(k),
+                "Accuracy@1": metrics.get("accuracy@1", 0),
+                "Recall@5": metrics.get("recall@5", 0),
+                "MRR": metrics.get("mrr", 0)
+            })
+
+        if ablation_data:
+            abl_df = pd.DataFrame(ablation_data).sort_values("K")
+
+            col1, col2 = st.columns(2)
+
+            with col1:
+                st.dataframe(abl_df.style.format({
+                    "Accuracy@1": "{:.4f}",
+                    "Recall@5": "{:.4f}",
+                    "MRR": "{:.4f}"
+                }), use_container_width=True, hide_index=True)
+
+            with col2:
+                fig = px.line(
+                    abl_df, x="K", y="Accuracy@1",
+                    markers=True,
+                    title="Accuracy@1 vs Support Set Size"
+                )
+                fig.update_layout(yaxis_tickformat=".0%")
+                st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.info("No support set size ablation data available.")
+
+with tab2:
+    ablation_steps = warmstart_maml.get("ablation_adaptation_steps", {})
+    if ablation_steps:
+        steps_data = []
+        for steps, metrics in ablation_steps.items():
+            steps_data.append({
+                "Steps": int(steps),
+                "Accuracy@1": metrics.get("accuracy@1", 0),
+                "Recall@5": metrics.get("recall@5", 0),
+                "MRR": metrics.get("mrr", 0)
+            })
+
+        if steps_data:
+            steps_df = pd.DataFrame(steps_data).sort_values("Steps")
+
+            col1, col2 = st.columns(2)
+
+            with col1:
+                st.dataframe(steps_df.style.format({
+                    "Accuracy@1": "{:.4f}",
+                    "Recall@5": "{:.4f}",
+                    "MRR": "{:.4f}"
+                }), use_container_width=True, hide_index=True)
+
+            with col2:
+                fig = px.line(
+                    steps_df, x="Steps", y="Accuracy@1",
+                    markers=True,
+                    title="Accuracy@1 vs Adaptation Steps"
+                )
+                fig.update_layout(yaxis_tickformat=".0%")
+                st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.info("No adaptation steps ablation data available.")
+
+# Sweep Results (if available)
+if sweep_results:
+    st.header("🎯 Hyperparameter Tuning")
 
     col1, col2 = st.columns(2)
 
     with col1:
-        if "train_loss" in history_df.columns:
-            fig = px.line(
-                history_df,
-                y="train_loss",
-                title="Training Loss",
-                labels={"index": "Epoch", "train_loss": "Loss"}
-            )
-            st.plotly_chart(fig, use_container_width=True)
+        st.subheader("Optimal Configuration")
+        if "checkpoint_used" in sweep_results:
+            st.write(f"**Best Checkpoint:** {sweep_results['checkpoint_used']}")
+        if "inner_lr" in sweep_results:
+            st.write(f"**Optimal Inner LR:** {sweep_results['inner_lr']}")
 
     with col2:
-        if "val_mrr" in history_df.columns:
-            fig = px.line(
-                history_df,
-                y="val_mrr",
-                title="Validation MRR",
-                labels={"index": "Epoch", "val_mrr": "MRR"}
-            )
-            st.plotly_chart(fig, use_container_width=True)
+        st.subheader("Tuned Performance")
+        if "maml_few_shot_K5_acc1" in sweep_results:
+            st.metric("Tuned Acc@1", f"{sweep_results['maml_few_shot_K5_acc1']:.2%}")
 
-# Comparison with other methods
-st.header("Comparison with Other Methods")
+# Key Insights
+st.header("💡 Key Insights")
 
-comparison_data = []
+st.markdown(f"""
+### Results Summary
 
-# Add baselines
-if baselines:
-    baseline_data = baselines.get("baselines", {})
-    gru_metrics = baseline_data.get("gru_global", {})
-    if gru_metrics:
-        comparison_data.append({
-            "Model": "GRU Global",
-            "Accuracy@1": gru_metrics.get("accuracy@1", 0),
-            "Recall@5": gru_metrics.get("recall@5", 0),
-            "Recall@10": gru_metrics.get("recall@10", 0),
-            "MRR": gru_metrics.get("mrr", 0)
-        })
+| Aspect | Finding |
+|--------|---------|
+| **Zero-shot** | {zero_shot.get('accuracy@1', 0):.2%} Acc@1 (without adaptation) |
+| **Few-shot** | {few_shot.get('accuracy@1', 0):.2%} Acc@1 (with K=5 adaptation) |
+| **vs Baseline** | {improvement:+.2f}% compared to GRU global |
 
-# Add Basic MAML
-if basic_maml:
-    basic_metrics = basic_maml.get("final_metrics", basic_maml.get("test_metrics", {}))
-    if basic_metrics:
-        comparison_data.append({
-            "Model": "Basic MAML",
-            "Accuracy@1": basic_metrics.get("accuracy@1", 0),
-            "Recall@5": basic_metrics.get("recall@5", 0),
-            "Recall@10": basic_metrics.get("recall@10", 0),
-            "MRR": basic_metrics.get("mrr", 0)
-        })
+### Observations
 
-# Add Warm-Start MAML
-comparison_data.append({
-    "Model": "Warm-Start MAML",
-    "Accuracy@1": final_metrics.get("accuracy@1", 0),
-    "Recall@5": final_metrics.get("recall@5", 0),
-    "Recall@10": final_metrics.get("recall@10", 0),
-    "MRR": final_metrics.get("mrr", 0)
-})
-
-comp_df = pd.DataFrame(comparison_data)
-
-# Display table
-display_df = comp_df.copy()
-for col in ["Accuracy@1", "Recall@5", "Recall@10", "MRR"]:
-    display_df[col] = display_df[col].apply(lambda x: f"{x:.4f}")
-st.table(display_df)
-
-# Bar chart comparison
-melted = comp_df.melt(id_vars=["Model"], var_name="Metric", value_name="Score")
-fig = px.bar(
-    melted,
-    x="Metric",
-    y="Score",
-    color="Model",
-    barmode="group",
-    title="Model Comparison",
-    color_discrete_sequence=["#3498db", "#e74c3c", "#2ecc71"]
-)
-st.plotly_chart(fig, use_container_width=True)
-
-# Improvement over Basic MAML
-if basic_maml:
-    basic_metrics = basic_maml.get("final_metrics", basic_maml.get("test_metrics", {}))
-    if basic_metrics:
-        st.subheader("Improvement over Basic MAML")
-
-        improvements = {}
-        for metric in ["accuracy@1", "recall@5", "recall@10", "mrr"]:
-            basic_val = basic_metrics.get(metric, 0)
-            warmstart_val = final_metrics.get(metric, 0)
-            if basic_val > 0:
-                pct_change = (warmstart_val - basic_val) / basic_val * 100
-                improvements[metric] = pct_change
-
-        if improvements:
-            col1, col2, col3, col4 = st.columns(4)
-
-            with col1:
-                delta = improvements.get("accuracy@1", 0)
-                st.metric("Accuracy@1", f"{final_metrics.get('accuracy@1', 0):.4f}",
-                         delta=f"{delta:+.1f}%")
-
-            with col2:
-                delta = improvements.get("recall@5", 0)
-                st.metric("Recall@5", f"{final_metrics.get('recall@5', 0):.4f}",
-                         delta=f"{delta:+.1f}%")
-
-            with col3:
-                delta = improvements.get("recall@10", 0)
-                st.metric("Recall@10", f"{final_metrics.get('recall@10', 0):.4f}",
-                         delta=f"{delta:+.1f}%")
-
-            with col4:
-                delta = improvements.get("mrr", 0)
-                st.metric("MRR", f"{final_metrics.get('mrr', 0):.4f}",
-                         delta=f"{delta:+.1f}%")
-
-# Key insights
-st.header("Key Insights")
-
-st.markdown("""
-### Warm-Start Benefits
-
-1. **Better Initialization**: Starting from pre-trained weights provides a stronger foundation
-2. **Faster Convergence**: Less training epochs needed to reach good performance
-3. **Transfer Learning**: Leverages patterns learned during global training
-
-### When Warm-Start Helps
-
-- When the pre-trained model is good quality
-- When there's enough global training data
-- When user-specific patterns aren't drastically different from global patterns
+1. **Warm-start provides stable initialization** - Starting from pre-trained weights gives consistent results
+2. **Adaptation improves performance** - Few-shot adaptation ({few_shot.get('accuracy@1', 0):.2%}) beats zero-shot ({zero_shot.get('accuracy@1', 0):.2%})
+3. **Trade-off with baseline** - May not always beat the global GRU model
 """)
 
 # Configuration
-st.header("Training Configuration")
-
-hyperparams = warmstart_maml.get("hyperparameters", warmstart_maml.get("config", {}))
-if hyperparams:
-    config_df = pd.DataFrame({
-        "Parameter": list(hyperparams.keys()),
-        "Value": [str(v) for v in hyperparams.values()]
-    })
-    st.table(config_df)
+with st.expander("📋 Experiment Configuration"):
+    k_config = warmstart_maml.get("k_shot_config", {})
+    st.write(f"**K (Support Size):** {k_config.get('K', 5)}")
+    st.write(f"**Q (Query Size):** {k_config.get('Q', 10)}")
+    st.write(f"**Test Episodes:** {warmstart_maml.get('n_test_episodes', 'N/A')}")
