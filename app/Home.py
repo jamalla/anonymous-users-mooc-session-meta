@@ -31,7 +31,7 @@ st.subheader("Meta-Learning for New User Recommendations")
 st.markdown("""
 ---
 
-## Project Overview
+## Research Overview
 
 This application demonstrates a **meta-learning approach** for cold-start recommendation
 in Massive Open Online Courses (MOOCs). The goal is to quickly adapt to new users with
@@ -42,32 +42,54 @@ only a few interactions.
 - **Cold-Start Problem**: New users have no interaction history, making recommendations difficult
 - **Meta-Learning (MAML)**: Learn an initialization that can quickly adapt to new users
 - **Few-Shot Learning**: Adapt with only K=5 support examples per user
+- **Session Reliability**: Weight training samples by session quality
 
-### Datasets
+### Dataset
 
 | Dataset | Description | Size |
 |---------|-------------|------|
-| **XuetangX** | Large Chinese MOOC platform | 212K+ pairs, 3K+ users |
-| **MARS** | Smaller English MOOC dataset | 2.4K pairs, 800+ users |
+| **XuetangX** | Large Chinese MOOC platform | 281K+ pairs, 3K+ users |
 
 ### Pipeline
 
-1. **Data Ingestion** → Raw interactions
-2. **Sessionization** → Group by 30-min gaps
-3. **Pair Generation** → prefix → target sequences
-4. **User Splitting** → Train/Val/Test (disjoint users)
-5. **Episode Creation** → K-shot support + query sets
-6. **Baseline Training** → GRU, SASRec, Session-KNN
-7. **MAML Training** → Meta-learning variants
+1. **Data Ingestion** (NB01) - Raw interactions
+2. **Sessionization** (NB02) - Group by 30-min gaps
+3. **Pair Generation** (NB03) - prefix -> target sequences
+4. **Reliability Scoring** (NB03b) - Session reliability computation
+5. **User Splitting** (NB04) - Train/Val/Test (disjoint users)
+6. **Episode Creation** (NB05) - K-shot support + query sets
+7. **Baseline Training** (NB06) - GRU4Rec
+8. **MAML Training** (NB07) - Vanilla MAML
+9. **Reliability-Weighted MAML** (NB11) - Contribution 3
+10. **Warm-Start + Reliability** (NB12) - Combined approach
 
-### MAML Variants
+---
 
-| Variant | Warm-Start | Residual | Description |
-|---------|------------|----------|-------------|
-| Basic MAML | ❌ | ❌ | Random init, standard MAML |
-| Warm-Start | ✅ | ❌ | Initialize from GRU baseline |
-| Residual | ❌ | ✅ | Add unadapted loss term |
-| **Combined** | ✅ | ✅ | Best of both approaches |
+## Research Contributions
+
+### Contribution 3: Reliability-Weighted MAML
+
+Weight the inner loop loss by session reliability scores:
+
+```python
+weighted_loss = (reliability * per_sample_loss).sum() / reliability.sum()
+```
+
+Where reliability = (intensity + extent + composition) / 3
+
+### Results Summary
+
+| Method | HR@10 | NDCG@10 | Improvement |
+|--------|-------|---------|-------------|
+| Vanilla MAML (NB07) | 47.35% | 37.41% | baseline |
+| Reliability-Weighted MAML (NB11) | 48.34% | 37.71% | +0.99% |
+| **Warm-Start + Reliability (NB12)** | **55.62%** | **44.80%** | **+8.27%** |
+
+### Key Findings
+
+1. **Reliability weighting improves adaptation** - Sessions with more engagement (higher intensity, extent, composition) provide more signal
+2. **Warm-start provides strong initialization** - Pre-trained GRU4Rec weights preserve learned item relationships
+3. **Contributions stack effectively** - Combining warm-start + reliability achieves 17.5% relative improvement
 
 ---
 
@@ -78,16 +100,15 @@ Use the **sidebar** to navigate between pages:
 - 📊 **Dataset EDA** - Explore raw data statistics
 - 📈 **Session Gap Analysis** - Validate sessionization
 - 🔄 **Sessions** - View session statistics
-- 🎯 **Prefix → Target** - Training pair generation
-- 🏋️ **Baselines** - Baseline model results
-- 🧠 **MAML** - Basic MAML results
-- 🚀 **MAML + Warm-Start** - Warm-start variant
-- 🔁 **MAML + Residual** - Residual variant
-- ⭐ **MAML + Warm-Start + Residual** - Combined approach
+- 🎯 **Prefix -> Target** - Training pair generation
+- 🏋️ **Baselines** - GRU4Rec baseline results
+- 🧠 **MAML** - Vanilla MAML results (NB07)
+- 🎯 **Reliability MAML** - Reliability-Weighted MAML (NB11)
+- ⭐ **Combined** - Warm-Start + Reliability (NB12)
 
 ---
 
-*Built for MSc Thesis: Meta-Learning for Cold-Start MOOC Recommendation*
+*PhD Research: Meta-Learning for Cold-Start MOOC Recommendation*
 """)
 
 # Sidebar info
@@ -95,9 +116,16 @@ with st.sidebar:
     st.markdown("### 📁 Project Info")
     st.info(f"**Repo Root:**\n`{REPO_ROOT}`")
 
+    st.markdown("### 📊 Latest Results")
+    st.success("""
+    **Best Model: Warm-Start + Reliability**
+    - HR@10: 55.62%
+    - NDCG@10: 44.80%
+    - +8.27% over Vanilla MAML
+    """)
+
     st.markdown("### 🔗 Quick Links")
     st.markdown("""
     - [MAML Paper](https://arxiv.org/abs/1703.03400)
     - [XuetangX Dataset](https://www.xuetangx.com/)
-    - [MARS Dataset](https://github.com/marso/mars)
     """)
