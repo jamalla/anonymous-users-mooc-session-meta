@@ -63,6 +63,13 @@
       "run_tag": "20260201_025624",
       "created_at": "2026-02-01T02:56:24",
       "status": "started"
+    },
+    {
+      "run_id": "34234011e7c24a588c860f15cd68f39b",
+      "notebook": "03b_build_pairs_with_events_xuetangx",
+      "run_tag": "20260204_024509",
+      "out_dir": "/workspace/anonymous-users-mooc-session-meta/reports/03b_build_pairs_with_events_xuetangx/20260204_024509",
+      "created_at": "2026-02-04T02:45:09"
     }
   ]
 }
