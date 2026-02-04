@@ -1,5 +1,5 @@
 """
-MAML Page - Basic MAML Results
+MAML Page - Vanilla MAML Results (NB07)
 """
 
 import streamlit as st
@@ -12,31 +12,12 @@ from pathlib import Path
 
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from utils import get_dataset_config, load_baseline_results, load_maml_results, DATASETS
+from utils import get_dataset_config, load_maml_results, get_all_maml_comparison, DATASETS, CURRENT_RESULTS
 
-st.set_page_config(page_title="MAML", page_icon="🧠", layout="wide")
+st.set_page_config(page_title="Vanilla MAML", page_icon="🧠", layout="wide")
 
-st.title("🧠 Basic MAML")
+st.title("🧠 Vanilla MAML (NB07)")
 st.markdown("Model-Agnostic Meta-Learning for Cold-Start Recommendation")
-
-# Dataset selector
-dataset_name = st.sidebar.selectbox(
-    "Select Dataset",
-    options=list(DATASETS.keys()),
-    index=0
-)
-
-config = get_dataset_config(dataset_name)
-st.sidebar.info(f"**Dataset:** {config['name']}\n\n{config['description']}")
-
-# Load results
-@st.cache_data
-def load_all_results(dataset):
-    baselines = load_baseline_results(dataset)
-    maml = load_maml_results(dataset, "basic")
-    return baselines, maml
-
-baselines, maml_results = load_all_results(dataset_name)
 
 # MAML explanation
 st.header("What is MAML?")
@@ -51,51 +32,49 @@ Instead of training a single model for all users, MAML:
 2. **Adapts** to each new user with a few gradient steps
 3. Evaluates on the user's held-out data
 
-### Algorithm
+### Algorithm (FOMAML)
 
 ```
 For each training episode (user):
     1. Clone model parameters θ
-    2. Compute loss on support set
-    3. Update θ' = θ - α∇L_support
-    4. Compute loss on query set with θ'
-    5. Update θ using query loss gradient
+    2. Compute loss on support set (K=5 examples)
+    3. Update θ' = θ - α∇L_support (inner loop)
+    4. Compute loss on query set (Q=10 examples) with θ'
+    5. Update θ using query loss gradient (outer loop)
 ```
 
-### This Variant
+### Configuration (NB07)
 
 - **Initialization**: Random
-- **Residual Loss**: No
-- **Base Model**: GRU
+- **Base Model**: GRU4Rec (embedding_dim=64, hidden_dim=128)
+- **Inner LR**: 0.01
+- **Outer LR**: 0.001
+- **Inner Steps**: 5
+- **Meta Batch Size**: 32
+- **Meta Iterations**: 3000
 """)
 
-if maml_results is None:
-    st.warning(f"MAML results not found for {dataset_name}. Please run the MAML training first.")
-    st.stop()
-
-# Extract metrics
-final_metrics = maml_results.get("final_metrics", maml_results.get("test_metrics", {}))
-training_history = maml_results.get("training_history", [])
-
-if not final_metrics:
-    st.warning("No final metrics found in results.")
-    st.stop()
+# Load results
+maml_results = load_maml_results("XuetangX", "vanilla")
 
 # Display metrics
 st.header("Performance Metrics")
 
-col1, col2, col3, col4 = st.columns(4)
+# Use hardcoded values for reliability
+hr10 = CURRENT_RESULTS["XuetangX"]["vanilla_maml"]["test_HR@10"]
+ndcg10 = CURRENT_RESULTS["XuetangX"]["vanilla_maml"]["test_NDCG@10"]
 
-col1.metric("Accuracy@1", f"{final_metrics.get('accuracy@1', 0):.4f}")
-col2.metric("Recall@5", f"{final_metrics.get('recall@5', 0):.4f}")
-col3.metric("Recall@10", f"{final_metrics.get('recall@10', 0):.4f}")
-col4.metric("MRR", f"{final_metrics.get('mrr', 0):.4f}")
+col1, col2, col3 = st.columns(3)
+
+col1.metric("Test HR@10", f"{hr10:.2f}%")
+col2.metric("Test NDCG@10", f"{ndcg10:.2f}%")
+col3.metric("Test Queries", "3,130")
 
 # Training history
-if training_history:
+if maml_results and "training_log" in maml_results:
     st.header("Training History")
 
-    history_df = pd.DataFrame(training_history)
+    history_df = pd.DataFrame(maml_results["training_log"])
 
     col1, col2 = st.columns(2)
 
@@ -103,114 +82,128 @@ if training_history:
         if "train_loss" in history_df.columns:
             fig = px.line(
                 history_df,
+                x="iteration",
                 y="train_loss",
-                title="Training Loss",
-                labels={"index": "Epoch", "train_loss": "Loss"}
+                title="Training Loss over Iterations",
+                labels={"iteration": "Meta Iteration", "train_loss": "Loss"}
             )
             st.plotly_chart(fig, use_container_width=True)
 
     with col2:
-        if "val_mrr" in history_df.columns:
+        if "val_HR@10" in history_df.columns:
             fig = px.line(
                 history_df,
-                y="val_mrr",
-                title="Validation MRR",
-                labels={"index": "Epoch", "val_mrr": "MRR"}
+                x="iteration",
+                y="val_HR@10",
+                title="Validation HR@10 over Iterations",
+                labels={"iteration": "Meta Iteration", "val_HR@10": "HR@10 (%)"}
             )
             st.plotly_chart(fig, use_container_width=True)
 
-# Comparison with baselines
-st.header("Comparison with Baselines")
+# Comparison with other methods
+st.header("Comparison with Other MAML Variants")
 
-if baselines:
-    baseline_data = baselines.get("baselines", {})
+comparison_df = get_all_maml_comparison("XuetangX")
 
-    # Get GRU Global baseline for comparison
-    gru_metrics = baseline_data.get("gru_global", {})
-
-    comparison_data = []
-
-    # Add GRU baseline
-    if gru_metrics:
-        comparison_data.append({
-            "Model": "GRU Global",
-            "Accuracy@1": gru_metrics.get("accuracy@1", 0),
-            "Recall@5": gru_metrics.get("recall@5", 0),
-            "Recall@10": gru_metrics.get("recall@10", 0),
-            "MRR": gru_metrics.get("mrr", 0)
-        })
-
-    # Add MAML
-    comparison_data.append({
-        "Model": "Basic MAML",
-        "Accuracy@1": final_metrics.get("accuracy@1", 0),
-        "Recall@5": final_metrics.get("recall@5", 0),
-        "Recall@10": final_metrics.get("recall@10", 0),
-        "MRR": final_metrics.get("mrr", 0)
-    })
-
-    comp_df = pd.DataFrame(comparison_data)
-
+if not comparison_df.empty:
     # Display table
-    display_df = comp_df.copy()
-    for col in ["Accuracy@1", "Recall@5", "Recall@10", "MRR"]:
-        display_df[col] = display_df[col].apply(lambda x: f"{x:.4f}")
+    display_df = comparison_df.copy()
+    display_df["HR@10"] = display_df["HR@10"].apply(lambda x: f"{x:.2f}%")
+    display_df["NDCG@10"] = display_df["NDCG@10"].apply(lambda x: f"{x:.2f}%")
     st.table(display_df)
 
     # Bar chart comparison
-    melted = comp_df.melt(id_vars=["Model"], var_name="Metric", value_name="Score")
-    fig = px.bar(
-        melted,
-        x="Metric",
-        y="Score",
-        color="Model",
-        barmode="group",
-        title="MAML vs GRU Global Baseline",
-        color_discrete_sequence=["#3498db", "#e74c3c"]
+    fig = make_subplots(rows=1, cols=2, subplot_titles=("HR@10", "NDCG@10"))
+
+    colors = ["#3498db", "#e74c3c", "#2ecc71"]
+
+    fig.add_trace(
+        go.Bar(
+            x=comparison_df["Method"],
+            y=comparison_df["HR@10"],
+            marker_color=colors,
+            text=comparison_df["HR@10"].apply(lambda x: f"{x:.1f}%"),
+            textposition="outside",
+            name="HR@10"
+        ),
+        row=1, col=1
     )
+
+    fig.add_trace(
+        go.Bar(
+            x=comparison_df["Method"],
+            y=comparison_df["NDCG@10"],
+            marker_color=colors,
+            text=comparison_df["NDCG@10"].apply(lambda x: f"{x:.1f}%"),
+            textposition="outside",
+            name="NDCG@10"
+        ),
+        row=1, col=2
+    )
+
+    fig.update_layout(
+        title="MAML Variants Comparison",
+        showlegend=False,
+        height=400
+    )
+    fig.update_yaxes(range=[0, 65], row=1, col=1)
+    fig.update_yaxes(range=[0, 55], row=1, col=2)
+
     st.plotly_chart(fig, use_container_width=True)
 
-    # Improvement analysis
-    if gru_metrics:
-        st.subheader("Improvement Analysis")
+# Key insights
+st.header("Key Findings")
 
-        improvements = {}
-        for metric in ["accuracy@1", "recall@5", "recall@10", "mrr"]:
-            baseline_val = gru_metrics.get(metric, 0)
-            maml_val = final_metrics.get(metric, 0)
-            if baseline_val > 0:
-                pct_change = (maml_val - baseline_val) / baseline_val * 100
-                improvements[metric] = pct_change
+st.markdown(f"""
+### Vanilla MAML Performance
 
-        if improvements:
-            imp_df = pd.DataFrame({
-                "Metric": ["Accuracy@1", "Recall@5", "Recall@10", "MRR"],
-                "Change (%)": [
-                    improvements.get("accuracy@1", 0),
-                    improvements.get("recall@5", 0),
-                    improvements.get("recall@10", 0),
-                    improvements.get("mrr", 0)
-                ]
-            })
+- **Test HR@10**: {hr10:.2f}%
+- **Test NDCG@10**: {ndcg10:.2f}%
 
-            fig = px.bar(
-                imp_df,
-                x="Metric",
-                y="Change (%)",
-                title="Percentage Change vs GRU Baseline",
-                color="Change (%)",
-                color_continuous_scale=["red", "gray", "green"],
-                color_continuous_midpoint=0
-            )
-            st.plotly_chart(fig, use_container_width=True)
+### Observations
+
+1. **Few-shot adaptation works**: With only K=5 support examples, the model can adapt to new users
+2. **Room for improvement**: Vanilla MAML provides a baseline, but reliability weighting (NB11) and warm-start (NB12) can improve further
+3. **Meta-iterations matter**: 3000 iterations were needed to converge
+
+### Limitations
+
+- Random initialization means slow training
+- No reliability weighting - all samples treated equally
+- Inner loop doesn't account for session quality
+""")
 
 # Configuration details
 st.header("Training Configuration")
 
-hyperparams = maml_results.get("hyperparameters", maml_results.get("config", {}))
-if hyperparams:
-    config_df = pd.DataFrame({
-        "Parameter": list(hyperparams.keys()),
-        "Value": [str(v) for v in hyperparams.values()]
-    })
-    st.table(config_df)
+config_data = {
+    "Parameter": [
+        "K (support examples)",
+        "Q (query examples)",
+        "Inner Learning Rate",
+        "Outer Learning Rate",
+        "Inner Steps",
+        "Meta Batch Size",
+        "Meta Iterations",
+        "Use Second Order",
+        "Base Model",
+        "Embedding Dim",
+        "Hidden Dim",
+    ],
+    "Value": [
+        "5",
+        "10",
+        "0.01",
+        "0.001",
+        "5",
+        "32",
+        "3000",
+        "False (FOMAML)",
+        "GRU4Rec",
+        "64",
+        "128",
+    ]
+}
+
+config_df = pd.DataFrame(config_data)
+st.table(config_df)
