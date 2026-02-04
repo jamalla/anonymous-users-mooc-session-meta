@@ -5,12 +5,21 @@
       "Bash(ls:*)",
       "Bash(head:*)",
       "Bash(grep:*)",
-      "Bash(git add:*)",
-      "Bash(git commit -m \"$\\(cat <<''EOF''\nUpdate Streamlit app with MAML results and comparison page\n\n- Add page 10: Comparative Analysis with all MAML variants\n- Update pages 7-9 with proper results display\n- Add tuned results support in data_loader\n- Add .streamlit config for theme\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(git push:*)",
-      "Bash(git commit:*)",
-      "Bash(git pull:*)",
-      "Bash(git stash:*)"
+      "Bash(\"/c/Users/User/AppData/Local/Programs/Python/Python314/python.exe\" -c:*)",
+      "Bash(\"/c/Users/User/AppData/Local/Programs/Python/Python314/python.exe\":*)",
+      "Bash(\"/c/Users/User/AppData/Local/Programs/Python/Python314/python.exe\" -c \"\nimport json\n\n# Update Notebook 04\npath04 = ''c:/anonymous-users-mooc-session-meta/notebooks/04_user_split_xuetangx.ipynb''\nwith open\\(path04, ''r'', encoding=''utf-8''\\) as f:\n    nb = json.load\\(f\\)\n\nfor cell in nb[''cells'']:\n    if ''source'' in cell:\n        cell[''source''] = [line.replace\\(''264K pairs, 42K users'', ''175,521 pairs, 35,792 users''\\) for line in cell[''source'']]\n\nwith open\\(path04, ''w'', encoding=''utf-8''\\) as f:\n    json.dump\\(nb, f, indent=1\\)\nprint\\(''Updated Notebook 04''\\)\n\n# Update Notebook 05\npath05 = ''c:/anonymous-users-mooc-session-meta/notebooks/05_episode_index_xuetangx.ipynb''\nwith open\\(path05, ''r'', encoding=''utf-8''\\) as f:\n    nb = json.load\\(f\\)\n\nfor cell in nb[''cells'']:\n    if ''source'' in cell:\n        cell[''source''] = [line.replace\\(''212,923 pairs, 33,736 users'', ''139,349 pairs, 28,633 users''\\) for line in cell[''source'']]\n        cell[''source''] = [line.replace\\(''24,698 pairs, 4,217 users'', ''17,848 pairs, 3,579 users''\\) for line in cell[''source'']]\n        cell[''source''] = [line.replace\\(''26,608 pairs, 4,218 users'', ''18,324 pairs, 3,580 users''\\) for line in cell[''source'']]\n\nwith open\\(path05, ''w'', encoding=''utf-8''\\) as f:\n    json.dump\\(nb, f, indent=1\\)\nprint\\(''Updated Notebook 05''\\)\n\")",
+      "Bash(\"/c/Users/User/AppData/Local/Programs/Python/Python314/python.exe\" -c \"import json; nb = json.load\\(open\\(''c:/anonymous-users-mooc-session-meta/notebooks/07_maml_xuetangx.ipynb''\\)\\); [print\\(''''.join\\(c[''source'']\\)\\) for c in nb[''cells''] if c.get\\(''id''\\) == ''cell-4'']\")",
+      "Bash(\"/c/Users/User/AppData/Local/Programs/Python/Python314/python.exe\" -c \"import json; nb = json.load\\(open\\(''c:/anonymous-users-mooc-session-meta/notebooks/07_maml_xuetangx.ipynb'', encoding=''utf-8''\\)\\); [print\\(''''.join\\(c[''source'']\\)\\) for c in nb[''cells''] if c.get\\(''id''\\) == ''cell-4'']\")",
+      "Bash(powershell -Command \"Get-Content ''c:\\\\anonymous-users-mooc-session-meta\\\\notebooks\\\\07_maml_xuetangx.ipynb'' | Select-Object -First 80\")",
+      "Bash(powershell -Command:*)",
+      "Bash(more:*)",
+      "Bash(findstr:*)",
+      "Bash(where:*)",
+      "Bash(c:/anonymous-users-mooc-session-meta/venv/Scripts/python.exe:*)",
+      "Bash(\"/c/Users/User/AppData/Local/Programs/Python/Python311/python.exe\" -c \"print\\(''Python works''\\)\")",
+      "Bash(\"/c/Users/User/anaconda3/python.exe\" -c \"print\\(''test''\\)\")",
+      "Bash(python3:*)",
+      "Bash(dir:*)"
     ]
   }
 }

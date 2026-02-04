@@ -105,6 +105,14 @@ st.header("Gap Distribution")
 col1, col2 = st.columns(2)
 
 with col1:
+    st.markdown("""
+    **Histogram of Gaps (Linear Scale)**
+
+    This shows how gaps are distributed up to 2 hours. Most gaps are very short (< 5 minutes),
+    representing continuous activity within a session. The red dashed line shows the 30-minute
+    threshold we use to split sessions.
+    """)
+
     # Histogram of gaps (capped at 2 hours for visibility)
     gaps_capped = gaps[gaps <= 7200]  # 2 hours
     fig = px.histogram(
@@ -119,6 +127,14 @@ with col1:
     st.plotly_chart(fig, use_container_width=True)
 
 with col2:
+    st.markdown("""
+    **Histogram of Gaps (Log Scale)**
+
+    The log scale reveals the full range of gaps including very long ones (hours/days).
+    This shows a bimodal distribution: short within-session gaps and longer between-session gaps.
+    The 30-minute threshold separates these two modes.
+    """)
+
     # Log-scale histogram
     fig = px.histogram(
         np.log10(gaps + 1),
@@ -133,6 +149,14 @@ with col2:
 
 # CDF plot
 st.header("Cumulative Distribution Function")
+
+st.markdown("""
+**CDF of Inter-Activity Gaps**
+
+The CDF shows what percentage of gaps fall below a given time. The green horizontal line
+indicates what percentage of gaps are within the threshold. A good threshold should capture
+most within-session gaps while excluding between-session gaps.
+""")
 
 sorted_gaps = np.sort(gaps)
 cdf = np.arange(1, len(sorted_gaps) + 1) / len(sorted_gaps)
@@ -162,6 +186,14 @@ st.plotly_chart(fig, use_container_width=True)
 
 # Threshold sensitivity analysis
 st.header("Threshold Sensitivity Analysis")
+
+st.markdown("""
+**How different thresholds affect session segmentation**
+
+This analysis shows how the percentage of gaps classified as "within-session" changes
+with different threshold values. The 30-minute threshold is a common choice in the
+literature that balances session continuity with appropriate segmentation.
+""")
 
 thresholds = [5, 10, 15, 20, 30, 45, 60, 90, 120]
 pct_within = [(gaps <= t * 60).mean() * 100 for t in thresholds]

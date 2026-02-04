@@ -78,6 +78,12 @@ col4.metric("Avg Session Length", f"{avg_session_length:.1f} items")
 # Session length distribution
 st.header("Session Length Distribution")
 
+st.markdown("""
+**What this shows:** The distribution of how many items (course interactions) are in each session.
+Longer sessions indicate more engaged learning behavior. Sessions with only 1-2 items are filtered
+out as they don't provide enough signal for recommendation.
+""")
+
 col1, col2 = st.columns(2)
 
 with col1:
@@ -91,6 +97,14 @@ with col1:
     st.plotly_chart(fig, use_container_width=True)
 
 with col2:
+    st.markdown("""
+    **Box Plot Interpretation:**
+    - The box shows the interquartile range (25th to 75th percentile)
+    - The line inside the box is the median
+    - Whiskers extend to 1.5x IQR
+    - Points beyond whiskers are outliers (very long sessions)
+    """)
+
     fig = px.box(
         session_lengths,
         title="Session Length (Box Plot)",
@@ -113,6 +127,12 @@ st.table(length_stats)
 
 # Sessions per user distribution
 st.header("Sessions per User Distribution")
+
+st.markdown("""
+**What this shows:** How many learning sessions each user has. Users with more sessions
+provide more training data. For cold-start evaluation, we use users with enough sessions
+to create support and query sets.
+""")
 
 # For MARS (one row per item), count unique sessions per user
 if "session_id" in sessions_df.columns and "n_events" not in sessions_df.columns:

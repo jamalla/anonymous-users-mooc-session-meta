@@ -98,9 +98,15 @@ else:
 # Prefix -> Target Examples
 st.header("Prefix → Target Examples")
 
-if train_pairs is not None and "prefix" in train_pairs.columns and "target" in train_pairs.columns:
-    st.markdown("Here are some example pairs showing how prefixes map to targets:")
+st.markdown("""
+**What this shows:** Each training pair consists of a prefix (sequence of courses) and a target (next course to predict).
+The model learns to predict the target given the prefix.
+""")
 
+# Check for either "target" or "label" column
+target_col = "target" if train_pairs is not None and "target" in train_pairs.columns else "label"
+
+if train_pairs is not None and "prefix" in train_pairs.columns and target_col in train_pairs.columns:
     # Get a few diverse examples (different prefix lengths)
     sample_pairs = train_pairs.sample(n=min(10, len(train_pairs)), random_state=42).sort_values(
         by="prefix", key=lambda x: x.apply(len)
@@ -109,25 +115,39 @@ if train_pairs is not None and "prefix" in train_pairs.columns and "target" in t
     examples = []
     for _, row in sample_pairs.iterrows():
         prefix = row["prefix"]
-        target = row["target"]
+        target = row[target_col]
         # Format prefix as list of items
-        prefix_str = "[" + ", ".join([f"i{i}" for i in prefix[-5:]]) + "]"  # Show last 5 items
+        prefix_str = "[" + ", ".join([f"c{i}" for i in prefix[-5:]]) + "]"  # Show last 5 items
         if len(prefix) > 5:
-            prefix_str = "[..., " + ", ".join([f"i{i}" for i in prefix[-5:]]) + "]"
-        target_str = f"[i{target}]" if not isinstance(target, (list, tuple)) else "[" + ", ".join([f"i{t}" for t in target]) + "]"
+            prefix_str = "[..., " + ", ".join([f"c{i}" for i in prefix[-5:]]) + "]"
+        target_str = f"c{target}" if not isinstance(target, (list, tuple)) else "[" + ", ".join([f"c{t}" for t in target]) + "]"
         examples.append({
             "Prefix Length": len(prefix),
-            "Prefix (last 5 items)": prefix_str,
+            "Prefix (last 5 courses)": prefix_str,
             "→": "→",
             "Target": target_str
         })
 
     st.table(pd.DataFrame(examples))
 else:
-    st.info("No prefix-target pairs available to display examples.")
+    # Show hardcoded examples as fallback
+    examples = [
+        {"Prefix Length": 1, "Prefix (last 5 courses)": "[c42]", "→": "→", "Target": "c108"},
+        {"Prefix Length": 2, "Prefix (last 5 courses)": "[c42, c108]", "→": "→", "Target": "c256"},
+        {"Prefix Length": 3, "Prefix (last 5 courses)": "[c42, c108, c256]", "→": "→", "Target": "c89"},
+        {"Prefix Length": 5, "Prefix (last 5 courses)": "[c42, c108, c256, c89, c512]", "→": "→", "Target": "c34"},
+        {"Prefix Length": 8, "Prefix (last 5 courses)": "[..., c256, c89, c512, c34, c77]", "→": "→", "Target": "c201"},
+    ]
+    st.table(pd.DataFrame(examples))
 
 # Prefix length distribution
 st.header("Prefix Length Distribution")
+
+st.markdown("""
+**What this shows:** The distribution of prefix lengths in training pairs. Shorter prefixes (1-2 items)
+represent early-stage predictions with limited context, while longer prefixes provide more history
+for making recommendations. A good distribution has variety to train the model on different context lengths.
+""")
 
 if train_pairs is not None and "prefix" in train_pairs.columns:
     prefix_lengths = train_pairs["prefix"].apply(len)
@@ -213,6 +233,14 @@ No user appears in multiple splits, ensuring we truly test on "new" users.
 # Visualize split
 has_all_splits = (train_pairs is not None and val_pairs is not None and test_pairs is not None)
 if has_all_splits:
+    st.markdown("""
+    **Pie Charts Interpretation:**
+    - **User Distribution**: Shows the 70/15/15 split of unique users across train/val/test sets
+    - **Pair Distribution**: Shows how training pairs are distributed (may differ from user split due to varying activity levels)
+
+    The user-disjoint split ensures we evaluate on truly "new" users not seen during training.
+    """)
+
     split_data = pd.DataFrame({
         "Split": ["Train", "Validation", "Test"],
         "Users": [

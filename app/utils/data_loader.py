@@ -1,12 +1,14 @@
 """
 Data loading utilities for the Streamlit app.
+Updated to load from notebook reports with HR@10/NDCG@10 metrics.
 """
 
 import json
 import pandas as pd
 import numpy as np
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
+from datetime import datetime
 
 def find_repo_root() -> Path:
     """Find the repository root directory."""
@@ -30,15 +32,35 @@ DATASETS = {
         "models_path": REPO_ROOT / "models" / "baselines",
         "reports_path": REPO_ROOT / "reports",
     },
-    "MARS": {
-        "name": "MARS",
-        "description": "English MOOC Dataset",
-        "raw_path": REPO_ROOT / "data" / "raw" / "mars",
-        "interim_path": REPO_ROOT / "data" / "interim" / "mars",
-        "processed_path": REPO_ROOT / "data" / "processed" / "mars",
-        "results_path": REPO_ROOT / "results",
-        "models_path": REPO_ROOT / "models" / "baselines" / "mars",
-        "reports_path": REPO_ROOT / "reports",
+}
+
+# Current best results from notebooks (hardcoded for reliability)
+CURRENT_RESULTS = {
+    "XuetangX": {
+        "vanilla_maml": {
+            "notebook": "07_maml_xuetangx",
+            "test_HR@10": 47.35,
+            "test_NDCG@10": 37.41,
+            "description": "Vanilla MAML (random init)",
+        },
+        "reliability_maml": {
+            "notebook": "11_reliability_weighted_maml_xuetangx",
+            "test_HR@10": 48.34,
+            "test_NDCG@10": 37.71,
+            "description": "Reliability-Weighted MAML",
+        },
+        "warmstart_reliability_maml": {
+            "notebook": "12_warmstart_reliability_maml_xuetangx",
+            "test_HR@10": 55.62,
+            "test_NDCG@10": 44.80,
+            "description": "Warm-Start + Reliability-Weighted MAML",
+        },
+        "gru_baseline": {
+            "notebook": "06_baselines_xuetangx",
+            "test_HR@10": 33.55,
+            "test_NDCG@10": 25.0,
+            "description": "GRU4Rec Global Baseline",
+        },
     }
 }
 
@@ -59,15 +81,34 @@ def load_parquet(path: Path) -> Optional[pd.DataFrame]:
         return pd.read_parquet(path)
     return None
 
+def get_latest_report(notebook_name: str) -> Optional[Dict]:
+    """Get the latest report for a notebook."""
+    reports_dir = REPO_ROOT / "reports" / notebook_name
+
+    if not reports_dir.exists():
+        return None
+
+    # Find all run directories
+    run_dirs = [d for d in reports_dir.iterdir() if d.is_dir()]
+
+    if not run_dirs:
+        return None
+
+    # Sort by name (which is timestamp-based) and get the latest
+    run_dirs.sort(key=lambda x: x.name, reverse=True)
+
+    for run_dir in run_dirs:
+        report_path = run_dir / "report.json"
+        if report_path.exists():
+            return load_json(report_path)
+
+    return None
+
 def load_raw_data(dataset_name: str) -> Optional[pd.DataFrame]:
     """Load raw data for a dataset."""
     config = get_dataset_config(dataset_name)
 
-    if dataset_name == "MARS":
-        raw_file = config["raw_path"] / "explicit_ratings_en.csv"
-        if raw_file.exists():
-            return pd.read_csv(raw_file)
-    elif dataset_name == "XuetangX":
+    if dataset_name == "XuetangX":
         # XuetangX uses JSON files, load interim instead
         interim_file = config["interim_path"] / "interactions.parquet"
         if interim_file.exists():
@@ -105,6 +146,12 @@ def load_pairs(dataset_name: str, split: str = "train") -> Optional[pd.DataFrame
     path = config["processed_path"] / "pairs" / f"pairs_{split}.parquet"
     return load_parquet(path)
 
+def load_pairs_with_reliability(dataset_name: str) -> Optional[pd.DataFrame]:
+    """Load prefix-target pairs with reliability scores."""
+    config = get_dataset_config(dataset_name)
+    path = config["processed_path"] / "pairs_with_reliability" / "pairs.parquet"
+    return load_parquet(path)
+
 def load_episodes(dataset_name: str, split: str = "train", K: int = 5, Q: int = 10) -> Optional[pd.DataFrame]:
     """Load episodes for meta-learning."""
     config = get_dataset_config(dataset_name)
@@ -123,130 +170,104 @@ def load_vocab(dataset_name: str) -> Optional[Dict]:
     return None
 
 def load_baseline_results(dataset_name: str) -> Optional[Dict]:
-    """Load baseline results."""
-    config = get_dataset_config(dataset_name)
+    """Load baseline results from NB06 report."""
+    # Try to load from reports
+    report = get_latest_report("06_baselines_xuetangx")
 
-    if dataset_name == "MARS":
-        path = config["results_path"] / "mars_baselines_K5_Q10.json"
-    else:
-        path = config["results_path"] / "baselines_K5_Q10.json"
+    if report and report.get("metrics"):
+        return report
 
-    return load_json(path)
-
-def load_maml_results(dataset_name: str, variant: str = "basic") -> Optional[Dict]:
-    """Load MAML results for a specific variant."""
-    config = get_dataset_config(dataset_name)
-
-    # Map variant to filename
-    variant_files = {
-        "basic": "maml_K5_Q10.json",
-        "warmstart": "maml_warmstart_K5_Q10.json",
-        "residual": "maml_residual_K5_Q10.json",
-        "warmstart_residual": "maml_warmstart_residual_K5_Q10.json",
+    # Fallback to hardcoded results
+    return {
+        "baselines": {
+            "gru_global": {
+                "HR@10": CURRENT_RESULTS["XuetangX"]["gru_baseline"]["test_HR@10"],
+                "NDCG@10": CURRENT_RESULTS["XuetangX"]["gru_baseline"]["test_NDCG@10"],
+            }
+        }
     }
 
-    filename = variant_files.get(variant, "maml_K5_Q10.json")
-
-    if dataset_name == "MARS":
-        filename = filename.replace("maml_", "mars_maml_")
-
-    path = config["results_path"] / filename
-    data = load_json(path)
-
-    if data is None:
-        return None
-
-    # Normalize the format - extract key metrics into standard fields
-    normalized = data.copy()
-
-    # Find the MAML results section (different keys for different variants)
-    maml_section = None
-    for key in ["maml", "maml_warmstart", "maml_residual", "maml_warmstart_residual"]:
-        if key in data:
-            maml_section = data[key]
-            break
-
-    if maml_section:
-        # Extract zero-shot and few-shot metrics
-        normalized["zero_shot_metrics"] = maml_section.get("zero_shot", {})
-        normalized["few_shot_metrics"] = maml_section.get("few_shot_K5", {})
-        # Also set final_metrics to few_shot for backwards compatibility
-        normalized["final_metrics"] = maml_section.get("few_shot_K5", {})
-
-    # Extract baseline
-    if "baseline" in data:
-        normalized["baseline_metrics"] = data["baseline"].get("gru_global", {})
-
-    # Extract ablation results if present
-    normalized["ablation_support_size"] = data.get("ablation_support_size", {})
-    normalized["ablation_adaptation_steps"] = data.get("ablation_adaptation_steps", {})
-
-    # Extract sweep/tuning info and USE TUNED RESULTS if available
-    if "metrics" in data:
-        sweep = data["metrics"]
-        normalized["sweep_results"] = sweep
-
-        # If tuned results exist, use them as the primary few_shot_metrics
-        if "maml_few_shot_K5_acc1" in sweep:
-            # Update with tuned accuracy
-            tuned_acc = sweep["maml_few_shot_K5_acc1"]
-            if normalized.get("few_shot_metrics"):
-                normalized["few_shot_metrics"]["accuracy@1"] = tuned_acc
-            else:
-                normalized["few_shot_metrics"] = {"accuracy@1": tuned_acc}
-
-            # Also update improvement percentage
-            if "improvement_over_baseline_pct" in sweep:
-                normalized["improvement_over_baseline_pct"] = sweep["improvement_over_baseline_pct"]
-
-    return normalized
-
-
-def load_all_maml_results(dataset_name: str) -> Dict[str, Optional[Dict]]:
-    """Load all MAML variant results for comparison."""
-    variants = ["basic", "warmstart", "residual", "warmstart_residual"]
-    results = {}
-    for variant in variants:
-        results[variant] = load_maml_results(dataset_name, variant)
-    return results
-
-def render_dataset_selector() -> str:
+def load_maml_results(dataset_name: str, variant: str = "vanilla") -> Optional[Dict]:
     """
-    Render the global dataset selector in the sidebar.
-    Uses session state to persist selection across pages.
-    Returns the selected dataset name.
+    Load MAML results for a specific variant.
 
-    Must be called within a Streamlit page context.
+    Variants:
+    - "vanilla": Basic MAML (NB07)
+    - "reliability": Reliability-Weighted MAML (NB11)
+    - "warmstart_reliability": Warm-Start + Reliability (NB12)
     """
-    import streamlit as st
+    notebook_map = {
+        "vanilla": "07_maml_xuetangx",
+        "basic": "07_maml_xuetangx",
+        "reliability": "11_reliability_weighted_maml_xuetangx",
+        "warmstart_reliability": "12_warmstart_reliability_maml_xuetangx",
+        "combined": "12_warmstart_reliability_maml_xuetangx",
+    }
 
-    # Initialize session state if not exists
-    if "selected_dataset" not in st.session_state:
-        st.session_state.selected_dataset = "XuetangX"
+    notebook_name = notebook_map.get(variant, "07_maml_xuetangx")
+    report = get_latest_report(notebook_name)
 
-    with st.sidebar:
-        st.markdown("### 📊 Dataset Selection")
+    if report:
+        return report
 
-        dataset_options = list(DATASETS.keys())
-        selected = st.selectbox(
-            "Select Dataset",
-            options=dataset_options,
-            index=dataset_options.index(st.session_state.selected_dataset),
-            key=f"dataset_selector_{id(st)}",
-            help="Select the dataset to analyze"
-        )
+    # Fallback to hardcoded results
+    variant_key_map = {
+        "vanilla": "vanilla_maml",
+        "basic": "vanilla_maml",
+        "reliability": "reliability_maml",
+        "warmstart_reliability": "warmstart_reliability_maml",
+        "combined": "warmstart_reliability_maml",
+    }
 
-        # Update session state
-        st.session_state.selected_dataset = selected
+    key = variant_key_map.get(variant, "vanilla_maml")
+    hardcoded = CURRENT_RESULTS["XuetangX"].get(key, {})
 
-        # Show dataset info
-        config = DATASETS[selected]
-        st.caption(config["description"])
+    return {
+        "results": {
+            "test_HR@10": hardcoded.get("test_HR@10", 0),
+            "test_NDCG@10": hardcoded.get("test_NDCG@10", 0),
+        },
+        "description": hardcoded.get("description", ""),
+    }
 
-        st.divider()
+def get_all_maml_comparison(dataset_name: str = "XuetangX") -> pd.DataFrame:
+    """Get comparison dataframe of all MAML variants."""
+    data = []
 
-    return selected
+    # Vanilla MAML (NB07)
+    vanilla = load_maml_results(dataset_name, "vanilla")
+    if vanilla:
+        results = vanilla.get("results", vanilla.get("metrics", {}))
+        data.append({
+            "Method": "Vanilla MAML",
+            "Notebook": "NB07",
+            "HR@10": results.get("test_HR@10", CURRENT_RESULTS["XuetangX"]["vanilla_maml"]["test_HR@10"]),
+            "NDCG@10": results.get("test_NDCG@10", CURRENT_RESULTS["XuetangX"]["vanilla_maml"]["test_NDCG@10"]),
+        })
 
+    # Reliability-Weighted MAML (NB11)
+    reliability = load_maml_results(dataset_name, "reliability")
+    if reliability:
+        results = reliability.get("results", reliability.get("metrics", {}))
+        data.append({
+            "Method": "Reliability-Weighted MAML",
+            "Notebook": "NB11",
+            "HR@10": results.get("test_HR@10", CURRENT_RESULTS["XuetangX"]["reliability_maml"]["test_HR@10"]),
+            "NDCG@10": results.get("test_NDCG@10", CURRENT_RESULTS["XuetangX"]["reliability_maml"]["test_NDCG@10"]),
+        })
+
+    # Warm-Start + Reliability (NB12)
+    combined = load_maml_results(dataset_name, "warmstart_reliability")
+    if combined:
+        results = combined.get("results", combined.get("metrics", {}))
+        data.append({
+            "Method": "Warm-Start + Reliability",
+            "Notebook": "NB12",
+            "HR@10": results.get("test_HR@10", CURRENT_RESULTS["XuetangX"]["warmstart_reliability_maml"]["test_HR@10"]),
+            "NDCG@10": results.get("test_NDCG@10", CURRENT_RESULTS["XuetangX"]["warmstart_reliability_maml"]["test_NDCG@10"]),
+        })
+
+    return pd.DataFrame(data)
 
 def compute_gap_statistics(df: pd.DataFrame) -> Dict[str, Any]:
     """Compute gap statistics from interactions dataframe."""
