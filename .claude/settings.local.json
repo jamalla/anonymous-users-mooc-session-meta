@@ -19,7 +19,28 @@
       "Bash(\"/c/Users/User/AppData/Local/Programs/Python/Python311/python.exe\" -c \"print\\(''Python works''\\)\")",
       "Bash(\"/c/Users/User/anaconda3/python.exe\" -c \"print\\(''test''\\)\")",
       "Bash(python3:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(/c/Users/User/AppData/Local/Programs/Python/Python314/python.exe -c ':*)",
+      "Bash(py -c ':*)",
+      "Bash(cmd /c \"where python\")",
+      "Bash(python3.11 -c ':*)",
+      "Bash(py -c \"print\\('hello'\\)\")",
+      "Bash(/c/ProgramData/Anaconda3/python.exe)",
+      "Bash(py update_markdown.py)",
+      "Bash(del update_markdown.py)",
+      "Bash(py fix_nb03b.py)",
+      "Bash(perl -0777 -i -pe ':*)",
+      "Bash(sed -n '148,158p' /c/anonymous-users-mooc-session-meta/notebooks/mars/06_base_model_selection_mars.ipynb)",
+      "Read(//c/anonymous-users-mooc-session-meta/{printf \"    /\"    import os/n/\",/**)",
+      "Bash(/c/ProgramData/chocolatey/bin/python3.11)",
+      "Bash(python3.11 /tmp/extract_nb.py)",
+      "Read(//c/anonymous-users-mooc-session-meta/{printf \"hello/n world/**)",
+      "Bash(py -c \"import json,sys; d=json.load\\(open\\('/c/anonymous-users-mooc-session-meta/reports/09_srs_validation_xuetangx/20260409_155532/report.json'\\)\\); print\\(json.dumps\\(d.get\\('metrics',{}\\), indent=2\\)\\)\")",
+      "Bash(py -c \"import json; d=json.load\\(open\\(r'C:\\\\anonymous-users-mooc-session-meta\\\\reports\\\\09_srs_validation_xuetangx\\\\20260409_155532\\\\report.json'\\)\\); print\\(json.dumps\\(d.get\\('metrics',{}\\), indent=2\\)\\)\")",
+      "Bash(py -c \"import json; d=json.load\\(open\\(r'C:\\\\anonymous-users-mooc-session-meta\\\\reports\\\\09_srs_validation_mars\\\\20260409_213613\\\\report.json'\\)\\); print\\(json.dumps\\(d.get\\('metrics',{}\\), indent=2\\)\\)\")",
+      "Bash(git add:*)",
+      "Bash(git commit -m ':*)",
+      "Bash(git push:*)"
     ]
   }
 }
