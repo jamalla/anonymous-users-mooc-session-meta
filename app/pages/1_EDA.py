@@ -40,12 +40,12 @@ st.markdown("---")
 st.subheader("Dataset Scale")
 
 if dataset == "XuetangX":
-    raw_key, raw_label = "n_events", "Raw Events"
     col_defs = [
-        (raw_label,         f"{m01.get('n_events', 0):,}",  "All learning interaction events Feb–Aug 2017"),
-        ("Unique Users",    f"{m01.get('n_users', 0):,}",   "Distinct learner IDs"),
-        ("Unique Courses",  f"{m01.get('n_courses', 0):,}", "Courses in the vocabulary"),
-        ("Event Types",     str(m01.get("n_event_types", 0)), "Distinct interaction types"),
+        ("Raw Events",          f"{m01.get('n_events_raw', 0):,}",  "Total events in source file before any filtering"),
+        ("Learning Events",     f"{m01.get('n_events_kept', m01.get('n_events', 0)):,}", "Kept after filtering to learning-only event types"),
+        ("Unique Users",        f"{m01.get('n_users', 0):,}",   "Distinct learner IDs"),
+        ("Unique Courses",      f"{m01.get('n_courses', 0):,}", "Courses in the vocabulary"),
+        ("Event Types",         str(m01.get("n_event_types", 0)), "Distinct interaction types"),
     ]
 else:
     col_defs = [
@@ -185,15 +185,17 @@ else:
     xue_reports = load_dataset_reports("XuetangX")
     m01_x = metrics(xue_reports, "01_ingest")
 
+    xue_raw = m01_x.get("n_events_raw", m01_x.get("n_events", 0))
+    mars_raw = m01.get("n_interactions", 0)
     comp_data = {
         "Metric": ["Raw events/interactions", "Unique users", "Unique items/courses"],
         "XuetangX": [
-            m01_x.get("n_events", 0),
+            xue_raw,
             m01_x.get("n_users", 0),
             m01_x.get("n_courses", 0),
         ],
         "MARS": [
-            m01.get("n_interactions", 0),
+            mars_raw,
             m01.get("n_users", 0),
             m01.get("n_items", 0),
         ],
@@ -207,8 +209,10 @@ else:
     df_comp["MARS"]      = df_comp["MARS"].apply(lambda x: f"{x:,}")
     st.dataframe(df_comp, use_container_width=True, hide_index=True)
 
+    ratio_events = xue_raw / mars_raw if mars_raw > 0 else 0
+    ratio_users  = m01_x.get("n_users", 0) / m01.get("n_users", 1)
     st.info(
-        "MARS is **~7,700× smaller** in raw events and **~220× smaller** in users than XuetangX. "
+        f"MARS is **~{ratio_events:,.0f}× smaller** in raw events and **~{ratio_users:,.0f}× smaller** in users than XuetangX. "
         "This fundamental scale difference constrains the number of meta-learning episodes available "
         "and limits statistical power in evaluation."
     )

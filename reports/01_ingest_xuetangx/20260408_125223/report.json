@@ -9,7 +9,9 @@
     "n_users": 182755,
     "n_courses": 1518,
     "n_sessions": 467105,
-    "n_event_types": 8
+    "n_event_types": 8,
+    "n_events_raw": 56985474,
+    "n_events_kept": 28002537
   },
   "key_findings": [],
   "sanity_samples": {

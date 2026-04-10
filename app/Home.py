@@ -67,12 +67,14 @@ st.markdown("---")
 st.subheader(f"📌 Dataset at a Glance — {dataset}")
 
 if dataset == "XuetangX":
-    raw_key, raw_label = "n_events", "Raw Events"
+    raw_label = "Raw Events"
+    raw_val   = m01.get("n_events_raw", m01.get("n_events", 0))
 else:
-    raw_key, raw_label = "n_interactions", "Raw Interactions"
+    raw_label = "Raw Interactions"
+    raw_val   = m01.get("n_interactions", 0)
 
 c1, c2, c3, c4, c5 = st.columns(5)
-c1.metric(raw_label, f"{m01.get(raw_key, m01.get('n_events', 0)):,}")
+c1.metric(raw_label, f"{raw_val:,}")
 c2.metric("Raw Users", f"{m01.get('n_users', 0):,}")
 c3.metric("Vocabulary", f"{m01.get('n_items', m01.get('n_courses', 0)):,} items")
 c4.metric("Test Episodes", f"{m05.get('n_episodes_test', 0):,}")
