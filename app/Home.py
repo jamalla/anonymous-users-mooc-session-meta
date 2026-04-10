@@ -24,13 +24,17 @@ with st.sidebar:
     st.markdown("### 🎓 MOOC Recommendation")
     st.markdown("---")
     dataset = st.selectbox(
-        "**Select Dataset**",
+        "Select Dataset",
         options=list(DATASET_PREFIX.keys()),
         key="dataset",
         help="Choose the dataset to explore across all pages.",
     )
     st.markdown("---")
     st.caption("Navigate using the pages in the sidebar above.")
+    st.markdown("---")
+    st.markdown(
+        "[![GitHub](https://img.shields.io/badge/GitHub-Repository-black?logo=github)](https://github.com/jamalla/anonymous-users-mooc-session-meta)"
+    )
 
 # ── Load top-level stats ──────────────────────────────────────────────────────
 reports = load_dataset_reports(dataset)

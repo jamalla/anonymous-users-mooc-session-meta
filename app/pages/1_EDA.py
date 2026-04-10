@@ -20,7 +20,7 @@ with st.sidebar:
     st.markdown("### 🎓 MOOC Recommendation")
     st.markdown("---")
     dataset = st.selectbox(
-        "**Select Dataset**",
+        "Select Dataset",
         options=list(DATASET_PREFIX.keys()),
         key="dataset",
     )
