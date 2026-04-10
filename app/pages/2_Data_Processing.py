@@ -36,7 +36,7 @@ m03b = metrics(reports, "03b_srs_scores")
 m04 = metrics(reports, "04_user_split")
 m05 = metrics(reports, "05_episode_index")
 
-raw_events = m01.get("n_events", m01.get("n_interactions", 0))
+raw_events = m01.get("n_events_raw", m01.get("n_events", m01.get("n_interactions", 0)))
 
 st.title(f"🔬 Data Processing Pipeline — {dataset}")
 st.markdown(

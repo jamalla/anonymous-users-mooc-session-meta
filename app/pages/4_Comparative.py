@@ -412,9 +412,11 @@ with tab4:
         (
             "RQ3",
             "Does conditioning inner-loop adaptation on SRS improve cold-start performance?",
-            "On XuetangX (313+ test episodes): SRS-Adaptive MAML (NB10) shows modest improvement over "
+            f"On XuetangX ({metrics(xue, '05_episode_index').get('n_episodes_test', 0):,} test episodes): "
+            "SRS-Adaptive MAML (NB10) shows modest improvement over "
             "standard MAML; full Warm-Start + SRS-Adaptive (NB11) achieves the best overall HR@10. "
-            "On MARS (17 test episodes): warm-start dominates; SRS effects are statistically inconclusive "
+            f"On MARS ({metrics(mars, '05_episode_index').get('n_episodes_test', 0):,} test episodes): "
+            "warm-start dominates; SRS effects are statistically inconclusive "
             "due to limited test set size."
         ),
     ]
@@ -455,9 +457,11 @@ with tab4:
 
     # ── Limitations ───────────────────────────────────────────────────────────
     st.subheader("Limitations")
+    mars_test_eps = metrics(mars, "05_episode_index").get("n_episodes_test", 0)
+    mars_ep_pp    = round(100 / mars_test_eps, 2) if mars_test_eps > 0 else 0
     st.markdown(
-        """
-        1. **MARS test set (17 episodes):** Each episode = ~5.88 pp HR@10. High variance makes
+        f"""
+        1. **MARS test set ({mars_test_eps} episodes):** Each episode = ~{mars_ep_pp:.2f} pp HR@10. High variance makes
            statistical conclusions unreliable. MARS results are indicative only.
         2. **SRS CAP calibration:** 95th percentile CAPs are dataset-specific and must be
            recomputed for new datasets. Portability requires re-calibration.

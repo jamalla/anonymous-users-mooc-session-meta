@@ -300,9 +300,10 @@ with tab2:
         m05 = metrics(reports, "05_episode_index")
         n_test = m05.get("n_episodes_test", 0) if m05 else 0
         if n_test < 50:
+            ep_pp = round(100 / n_test, 2) if n_test > 0 else 0
             st.warning(
                 f"**MARS test set is very small ({n_test} episodes).** "
-                "Each episode contributes ~5.88 pp to HR@10. "
+                f"Each episode contributes ~{ep_pp:.2f} pp to HR@10. "
                 "Results have high variance and should be interpreted with caution. "
                 "Cross-dataset comparison requires acknowledging this limitation."
             )
