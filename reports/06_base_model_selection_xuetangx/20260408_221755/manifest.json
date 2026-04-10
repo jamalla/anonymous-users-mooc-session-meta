@@ -1,0 +1,18 @@
+{
+  "run_id": "aeeffdeec7d442ef9f69c28badeb9feb",
+  "notebook": "06_base_model_selection_xuetangx",
+  "run_tag": "20260408_221755",
+  "artifacts": [
+    {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/models/baselines/gru_global_xuetangx.pth",
+      "type": "model_checkpoint",
+      "sha256": "ccb3b178b0f4a78bc769d08334bc14b701b65411404bb9d2e8b642c04e4e0ea0",
+      "bytes": 1471856,
+      "note": "GRU4Rec pretrained on full xuetangx training set — used as MAML warm-start init"
+    },
+    {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/06_base_model_selection_xuetangx/20260408_221755/report.json",
+      "type": "report"
+    }
+  ]
+}

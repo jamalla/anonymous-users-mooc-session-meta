@@ -1,0 +1,24 @@
+{
+  "run_id": "2ee733fca77e46d58c4727b6fea2d8e9",
+  "notebook": "04_user_split_xuetangx",
+  "run_tag": "20260408_141441",
+  "created_at": "2026-04-08T14:14:41",
+  "metrics": {
+    "n_users_total": 70809,
+    "n_users_train": 49566,
+    "n_users_val": 10621,
+    "n_users_test": 10622,
+    "n_pairs_train": 344532,
+    "n_pairs_val": 69663,
+    "n_pairs_test": 73501,
+    "split": {
+      "train": 0.7,
+      "val": 0.15,
+      "test": 0.15
+    }
+  },
+  "key_findings": [],
+  "sanity_samples": {},
+  "data_fingerprints": {},
+  "notes": []
+}

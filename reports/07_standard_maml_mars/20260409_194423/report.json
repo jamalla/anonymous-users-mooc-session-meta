@@ -1,0 +1,23 @@
+{
+  "run_id": "abfbcfe841f34092a4f32a9f3b738672",
+  "notebook": "07_standard_maml_mars",
+  "run_tag": "20260409_194423",
+  "created_at": "2026-04-09T19:44:23",
+  "metrics": {
+    "hr1": 0.1411764705882353,
+    "hr5": 0.16470588235294117,
+    "hr10": 0.17647058823529413,
+    "ndcg10": 0.15553109638467144,
+    "mrr": 0.1536307983028604,
+    "n": 170
+  },
+  "key_findings": [
+    "Standard FOMAML benchmark: HR@10=17.65%, NDCG@10=15.55%",
+    "Best val HR@10=1.67% at iteration 100",
+    "Hyperparams: alpha=0.01, inner_steps=5, outer_lr=0.001, batch=32, iters=3000",
+    "Test episodes evaluated: 170, skipped: 0"
+  ],
+  "sanity_samples": {},
+  "data_fingerprints": {},
+  "notes": []
+}

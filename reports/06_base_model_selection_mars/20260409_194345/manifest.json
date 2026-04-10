@@ -1,0 +1,17 @@
+{
+  "run_id": "d171ab46cb2241cab4135af91a46d7b7",
+  "notebook": "06_base_model_selection_mars",
+  "run_tag": "20260409_194345",
+  "artifacts": [
+    {
+      "name": "gru_global_mars",
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/models/baselines/gru_global_mars.pth",
+      "sha256": "48c6972e055eaa0b0f86bbcd3b8752d6d85f9aad89cd6cfe301b88899c1969d9",
+      "size_bytes": 875792
+    },
+    {
+      "name": "report",
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/06_base_model_selection_mars/20260409_194345/report.json"
+    }
+  ]
+}

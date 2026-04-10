@@ -1,0 +1,33 @@
+{
+  "notebook": "08_warmstart_maml_mars",
+  "dataset": "mars",
+  "global_seed": 20260107,
+  "device": "cuda",
+  "K_support": 5,
+  "Q_query": 10,
+  "alpha_base": 0.01,
+  "num_inner_steps": 5,
+  "outer_lr": 0.0001,
+  "batch_size": 32,
+  "n_iterations": 3000,
+  "val_every": 100,
+  "max_seq_len": 50,
+  "gru_cfg": {
+    "embedding_dim": 64,
+    "hidden_dim": 128,
+    "num_layers": 1,
+    "dropout": 0.0
+  },
+  "pretrained_path": "/home/user/jamalla/anonymous-users-mooc-session-meta/models/baselines/gru_global_mars.pth",
+  "warmstart": true,
+  "srs_adaptive": false,
+  "inputs": {
+    "episodes_train": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/episodes/episodes_train_K5_Q10.parquet",
+    "episodes_val": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/episodes/episodes_val_K5_Q10.parquet",
+    "episodes_test": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/episodes/episodes_test_K5_Q10.parquet",
+    "pairs_train": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/pairs/pairs_train.parquet",
+    "pairs_val": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/pairs/pairs_val.parquet",
+    "pairs_test": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/pairs/pairs_test.parquet",
+    "vocab": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/vocab/item2id.json"
+  }
+}

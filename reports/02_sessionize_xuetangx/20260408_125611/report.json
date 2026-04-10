@@ -1,0 +1,106 @@
+{
+  "run_id": "8996dd03af13433c93f5b52e6bb07f86",
+  "notebook": "02_sessionize_xuetangx",
+  "run_tag": "20260408_125611",
+  "created_at": "2026-04-08T12:56:11",
+  "repo_root": "/home/user/jamalla/anonymous-users-mooc-session-meta",
+  "metrics": {
+    "n_events": 27875155,
+    "n_sessions": 906341,
+    "n_users": 173335,
+    "gap_threshold_sec": 1800,
+    "min_events_per_session": 2,
+    "gap_stats": {
+      "n_gaps": 27533251,
+      "p50_sec": 4.0,
+      "p90_sec": 205.0,
+      "p95_sec": 504.0,
+      "p99_sec": 21022.0,
+      "max_sec": 7005723.0
+    },
+    "n_eligible_users": 103317,
+    "proj_test_users": 15497
+  },
+  "key_findings": [],
+  "sanity_samples": {
+    "events_head3": [
+      {
+        "user_id": "1000063",
+        "course_id": "course-v1:TsinghuaX+20220332X+2016_T1",
+        "session_id": "1000063_000001",
+        "event_type": "load_video",
+        "timestamp": "2017-02-25T13:47:49",
+        "ts_epoch": 1488030469,
+        "pos_in_sess": 1,
+        "sess_len": 41
+      },
+      {
+        "user_id": "1000063",
+        "course_id": "course-v1:TsinghuaX+20220332X+2016_T1",
+        "session_id": "1000063_000001",
+        "event_type": "pause_video",
+        "timestamp": "2017-02-25T13:48:31",
+        "ts_epoch": 1488030511,
+        "pos_in_sess": 2,
+        "sess_len": 41
+      },
+      {
+        "user_id": "1000063",
+        "course_id": "course-v1:TsinghuaX+20220332X+2016_T1",
+        "session_id": "1000063_000001",
+        "event_type": "pause_video",
+        "timestamp": "2017-02-25T13:48:43",
+        "ts_epoch": 1488030523,
+        "pos_in_sess": 3,
+        "sess_len": 41
+      }
+    ],
+    "sessions_head3": [
+      {
+        "session_id": "1000063_000001",
+        "user_id": "1000063",
+        "course_id": "course-v1:TsinghuaX+20220332X+2016_T1",
+        "start_ts": 1488030469,
+        "end_ts": 1488032020,
+        "n_events": 41,
+        "n_unique_action_types": 4,
+        "duration_sec": 1551
+      },
+      {
+        "session_id": "1000063_000002",
+        "user_id": "1000063",
+        "course_id": "course-v1:TsinghuaX+10610224X_p1+sp",
+        "start_ts": 1500214046,
+        "end_ts": 1500214362,
+        "n_events": 32,
+        "n_unique_action_types": 3,
+        "duration_sec": 316
+      },
+      {
+        "session_id": "1000066_000001",
+        "user_id": "1000066",
+        "course_id": "course-v1:TsinghuaX+00690863X+2017_T1",
+        "start_ts": 1490347853,
+        "end_ts": 1490353444,
+        "n_events": 26,
+        "n_unique_action_types": 3,
+        "duration_sec": 5591
+      }
+    ]
+  },
+  "data_fingerprints": {
+    "events_sessionized": {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/xuetangx/sessions/events_sessionized.parquet",
+      "bytes": 137301509,
+      "sha256": "fb244c56a9af7560f417184253c6393a87b77372b4d9987da1d48fae3bf0df0d"
+    },
+    "sessions": {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/xuetangx/sessions/sessions.parquet",
+      "bytes": 13200818,
+      "sha256": "3bda46d21bac743d128019027a8e8d4829cdd279fffe260a0ff4341f3f3363d9"
+    }
+  },
+  "notes": [
+    "30-min gap threshold; sessions with < 2 events discarded."
+  ]
+}

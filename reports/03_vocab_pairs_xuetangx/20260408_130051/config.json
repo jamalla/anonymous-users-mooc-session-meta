@@ -1,0 +1,9 @@
+{
+  "notebook": "03_vocab_pairs_xuetangx",
+  "dataset": "xuetangx",
+  "seed": 20260107,
+  "pairs": {
+    "min_prefix_len": 1,
+    "deduplicate_consecutive": true
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "run_id": "6c0742bcd7e54567bb11af1f62f431de",
+  "notebook": "10_srs_adaptive_maml_xuetangx",
+  "run_tag": "20260409_155705",
+  "created_at": "2026-04-09T15:57:05",
+  "metrics": {
+    "hr1": 0.21906693711967545,
+    "hr5": 0.3783975659229209,
+    "hr10": 0.4619675456389452,
+    "ndcg10": 0.3295885944036756,
+    "mrr": 0.3006874733089603,
+    "n": 9860
+  },
+  "key_findings": [
+    "SRS-Adaptive MAML ablation: HR@10=46.20%, NDCG@10=32.96%",
+    "Best val HR@10=46.91% at iteration 2900",
+    "Hyperparams: alpha_base=0.01, tau=0.5, K_min=3, K_max=7, outer_lr=0.001, batch=32, iters=3000",
+    "No warm-start (random init) -- ablation of C2 alone",
+    "Inner loop: SRS-Adaptive (alpha_i=alpha_base*SRS_i, K_i depends on tau)",
+    "Outer loss: SRS-weighted (sum_i SRS_i * L_query(phi_i))",
+    "Test episodes evaluated: 9860, skipped: 0"
+  ],
+  "sanity_samples": {},
+  "data_fingerprints": {},
+  "notes": []
+}

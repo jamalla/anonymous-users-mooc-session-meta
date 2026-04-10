@@ -17,7 +17,6 @@ data/raw/*
 data/processed/*
 data/interim/*
 runs/*
-reports/*
 results/*
 
 docs/*
@@ -32,7 +31,6 @@ old/*
 # Logs
 *.log
 
-PROJECT_STATE.md
 .claude/
 .idea/
 .vscode/

@@ -1,0 +1,11 @@
+{
+  "notebook": "02_sessionize_xuetangx",
+  "dataset": "xuetangx",
+  "run_id": "8996dd03af13433c93f5b52e6bb07f86",
+  "run_tag": "20260408_125611",
+  "seed": 20260107,
+  "sessionization": {
+    "gap_threshold_seconds": 1800,
+    "min_events_per_session": 2
+  }
+}

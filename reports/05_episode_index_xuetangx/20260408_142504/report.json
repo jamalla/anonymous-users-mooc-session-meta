@@ -1,0 +1,17 @@
+{
+  "run_id": "7e75fa70bffc473e9ae2850074585fa9",
+  "notebook": "05_episode_index_xuetangx",
+  "run_tag": "20260408_142504",
+  "created_at": "2026-04-08T14:25:04",
+  "metrics": {
+    "K": 5,
+    "Q": 10,
+    "n_episodes_train": 113920,
+    "n_episodes_val": 942,
+    "n_episodes_test": 986
+  },
+  "key_findings": [],
+  "sanity_samples": {},
+  "data_fingerprints": {},
+  "notes": []
+}

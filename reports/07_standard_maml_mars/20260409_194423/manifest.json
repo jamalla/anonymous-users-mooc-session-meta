@@ -1,0 +1,23 @@
+{
+  "run_id": "abfbcfe841f34092a4f32a9f3b738672",
+  "notebook": "07_standard_maml_mars",
+  "run_tag": "20260409_194423",
+  "artifacts": [
+    {
+      "type": "results_json",
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/07_standard_maml_mars/20260409_194423/results_07_standard_maml_mars.json"
+    },
+    {
+      "type": "checkpoint",
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/models/maml/maml_standard_mars.pth"
+    },
+    {
+      "type": "report",
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/07_standard_maml_mars/20260409_194423/report.json"
+    },
+    {
+      "type": "config",
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/07_standard_maml_mars/20260409_194423/config.json"
+    }
+  ]
+}

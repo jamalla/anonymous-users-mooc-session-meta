@@ -1,0 +1,22 @@
+{
+  "run_id": "eeedb764f9dc45e99e2d8c44d5b2f024",
+  "notebook": "05_episode_index_mars",
+  "run_tag": "20260409_190522",
+  "created_at": "2026-04-09T19:05:22",
+  "metrics": {
+    "K": 5,
+    "Q": 10,
+    "n_episodes_train": 111,
+    "n_episodes_val": 6,
+    "n_episodes_test": 17
+  },
+  "key_findings": [
+    "Train episodes: 111",
+    "Val episodes:   6 (>= 50 required)",
+    "Test episodes:  17 (>= 50 required)",
+    "Protocol: K=5 support + Q=10 query, chronological no-leakage"
+  ],
+  "sanity_samples": {},
+  "data_fingerprints": {},
+  "notes": []
+}

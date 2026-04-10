@@ -1,0 +1,22 @@
+{
+  "run_id": "0c22d65a33784b53ad0a4308c3dc17d9",
+  "notebook": "03_vocab_pairs_mars",
+  "run_tag": "20260409_180743",
+  "artifacts": [
+    {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/vocab/item2id.json",
+      "bytes": 11496,
+      "sha256": "a557def10f64e8126646846f6577bb46e7e658ae2c1d245171bed16f61ffa7dd"
+    },
+    {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/vocab/id2item.json",
+      "bytes": 12986,
+      "sha256": "b36609c17cdd3de599c85bf95e0bb5df48ae7f33d12f10a32664cc28802c14f5"
+    },
+    {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/pairs/pairs.parquet",
+      "bytes": 42767,
+      "sha256": "3856bed3fc43eec1ea5a6e0790039acca6fbb7a052de639a2ac2918a620a67bc"
+    }
+  ]
+}

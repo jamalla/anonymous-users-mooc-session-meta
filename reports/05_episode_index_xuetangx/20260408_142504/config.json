@@ -1,0 +1,7 @@
+{
+  "notebook": "05_episode_index_xuetangx",
+  "dataset": "xuetangx",
+  "seed": 20260107,
+  "K_support": 5,
+  "Q_query": 10
+}

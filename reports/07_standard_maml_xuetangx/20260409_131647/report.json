@@ -1,0 +1,23 @@
+{
+  "run_id": "54d388a4b5204ce089597e2aad737d1d",
+  "notebook": "07_standard_maml_xuetangx",
+  "run_tag": "20260409_131647",
+  "created_at": "2026-04-09T13:16:47",
+  "metrics": {
+    "hr1": 0.23356997971602433,
+    "hr5": 0.3954361054766734,
+    "hr10": 0.4746450304259635,
+    "ndcg10": 0.3435375195128366,
+    "mrr": 0.3148658337435125,
+    "n": 9860
+  },
+  "key_findings": [
+    "Standard FOMAML benchmark: HR@10=47.46%, NDCG@10=34.35%",
+    "Best val HR@10=49.12% at iteration 2800",
+    "Hyperparams: alpha=0.01, inner_steps=5, outer_lr=0.001, batch=32, iters=3000",
+    "Test episodes evaluated: 9860, skipped: 0"
+  ],
+  "sanity_samples": {},
+  "data_fingerprints": {},
+  "notes": []
+}

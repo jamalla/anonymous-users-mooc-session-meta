@@ -1,0 +1,8 @@
+{
+  "notebook": "06_base_model_selection_mars",
+  "dataset": "mars",
+  "global_seed": 20260107,
+  "K_support": 5,
+  "Q_query": 10,
+  "device": "cuda"
+}

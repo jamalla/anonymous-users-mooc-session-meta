@@ -1,0 +1,67 @@
+{
+  "run_id": "0c22d65a33784b53ad0a4308c3dc17d9",
+  "notebook": "03_vocab_pairs_mars",
+  "run_tag": "20260409_180743",
+  "created_at": "2026-04-09T18:07:43",
+  "metrics": {
+    "n_items": 745,
+    "n_pairs": 2333,
+    "n_users": 378,
+    "n_sessions_with_pairs": 561
+  },
+  "key_findings": [],
+  "sanity_samples": {
+    "pairs_head3": [
+      {
+        "pair_id": 0,
+        "user_id": 672,
+        "session_id": 0,
+        "prefix": [
+          12
+        ],
+        "label": 114,
+        "label_ts_epoch": 1540893320,
+        "prefix_len": 1
+      },
+      {
+        "pair_id": 1,
+        "user_id": 672,
+        "session_id": 0,
+        "prefix": [
+          12,
+          114
+        ],
+        "label": 224,
+        "label_ts_epoch": 1540893584,
+        "prefix_len": 2
+      },
+      {
+        "pair_id": 2,
+        "user_id": 4448,
+        "session_id": 4,
+        "prefix": [
+          655
+        ],
+        "label": 656,
+        "label_ts_epoch": 1584478316,
+        "prefix_len": 1
+      }
+    ]
+  },
+  "data_fingerprints": {
+    "pairs": {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/pairs/pairs.parquet",
+      "bytes": 42767,
+      "sha256": "3856bed3fc43eec1ea5a6e0790039acca6fbb7a052de639a2ac2918a620a67bc"
+    },
+    "item2id": {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/vocab/item2id.json"
+    },
+    "id2item": {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/vocab/id2item.json"
+    }
+  },
+  "notes": [
+    "Vocabulary: 745 unique items (0-indexed). Consecutive duplicates removed within sessions."
+  ]
+}

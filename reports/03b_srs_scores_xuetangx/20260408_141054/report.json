@@ -1,0 +1,31 @@
+{
+  "run_id": "3c63e8ec7eb0452fb3b690044f79699a",
+  "notebook": "03b_srs_scores_xuetangx",
+  "run_tag": "20260408_141054",
+  "created_at": "2026-04-08T14:10:54",
+  "metrics": {
+    "n_pairs": 487696,
+    "n_sessions": 906341,
+    "cap_intensity": 115.0,
+    "cap_extent": 6653.0,
+    "n_possible": 6,
+    "srs_mean": 0.3248493912765726,
+    "srs_p50": 0.245584,
+    "tier_low": 0.6275695350866837,
+    "tier_medium": 0.2584413592676487,
+    "tier_high": 0.11398910564566758
+  },
+  "key_findings": [],
+  "sanity_samples": {},
+  "data_fingerprints": {
+    "pairs_srs": {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/xuetangx/pairs_srs/pairs.parquet",
+      "sha256": "192d64ecda694d8b594964acfee2eabc866df15605c4865005e9d072aac2d165"
+    },
+    "session_srs": {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/xuetangx/pairs_srs/session_srs.parquet",
+      "sha256": "b46756c3789565f9cb7a042f5963194882898fa84490cf9739c52abcc89d95d6"
+    }
+  },
+  "notes": []
+}

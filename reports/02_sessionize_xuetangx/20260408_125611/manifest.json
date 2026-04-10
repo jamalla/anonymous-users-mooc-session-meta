@@ -1,0 +1,22 @@
+{
+  "run_id": "8996dd03af13433c93f5b52e6bb07f86",
+  "notebook": "02_sessionize_xuetangx",
+  "run_tag": "20260408_125611",
+  "artifacts": [
+    {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/xuetangx/sessions/events_sessionized.parquet",
+      "bytes": 137301509,
+      "sha256": "fb244c56a9af7560f417184253c6393a87b77372b4d9987da1d48fae3bf0df0d"
+    },
+    {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/xuetangx/sessions/sessions.parquet",
+      "bytes": 13200818,
+      "sha256": "3bda46d21bac743d128019027a8e8d4829cdd279fffe260a0ff4341f3f3363d9"
+    },
+    {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/interim/xuetangx.duckdb",
+      "bytes": 274432,
+      "sha256": "91d7462892f5c46f395c6c7816dbda4f7a88de48ec53c69a470360f8d6d3db00"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "notebook": "01_ingest_mars",
+  "dataset": "mars",
+  "run_id": "2c6d52ee95104629b778406c382a1844",
+  "run_tag": "20260409_180531",
+  "seed": 20260107,
+  "paths": {
+    "raw_csv": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/raw/mars/explicit_ratings_en.csv",
+    "out_parquet": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/interim/mars/interactions.parquet",
+    "out_duckdb": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/interim/mars.duckdb",
+    "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/01_ingest_mars/20260409_180531"
+  },
+  "ingest": {
+    "source_columns": [
+      "user_id",
+      "item_id",
+      "watch_percentage",
+      "created_at",
+      "rating"
+    ],
+    "dedup_keys": [
+      "user_id",
+      "item_id",
+      "ts_epoch"
+    ],
+    "parquet_compression": "zstd",
+    "duckdb_view": "mars_interactions"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "notebook": "03b_srs_scores_mars",
+  "dataset": "mars",
+  "seed": 20260107,
+  "srs": {
+    "cap_percentile": 95,
+    "components": [
+      "intensity",
+      "extent",
+      "composition"
+    ],
+    "composition_field": "n_unique_items",
+    "note": "CAPs computed from training sessions only (no leakage)"
+  }
+}

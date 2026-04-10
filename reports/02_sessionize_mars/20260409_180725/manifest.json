@@ -1,0 +1,22 @@
+{
+  "run_id": "08b4af9619dd4d06b030f93d3a9c83d4",
+  "notebook": "02_sessionize_mars",
+  "run_tag": "20260409_180725",
+  "artifacts": [
+    {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/events_sessionized.parquet",
+      "bytes": 28678,
+      "sha256": "907cfa58598d5900456d8707be3bc8330399055d5ffe0e7100b04fc6e7db1eae"
+    },
+    {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/sessions/sessions.parquet",
+      "bytes": 9326,
+      "sha256": "d8f8fdb73ed68fac00a3899bf354a7c0cf8177259cb946d69453519c325f6244"
+    },
+    {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/interim/mars.duckdb",
+      "bytes": 274432,
+      "sha256": "d054f884c71dba41ca1b5e41be8f8f5852fc9f466de56da60d8c45c72b7e5a31"
+    }
+  ]
+}

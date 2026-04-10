@@ -1,0 +1,83 @@
+{
+  "run_id": "08b4af9619dd4d06b030f93d3a9c83d4",
+  "notebook": "02_sessionize_mars",
+  "run_tag": "20260409_180725",
+  "created_at": "2026-04-09T18:07:25",
+  "metrics": {
+    "n_events": 2894,
+    "n_sessions": 561,
+    "n_users": 378,
+    "n_items": 745,
+    "gap_threshold_sec": 1800,
+    "min_events_per_session": 2,
+    "n_eligible_users": 42,
+    "proj_test_users": 6
+  },
+  "key_findings": [],
+  "sanity_samples": {
+    "events_head3": [
+      {
+        "user_id": 672,
+        "item_id": 538,
+        "ts_epoch": 1540892762,
+        "session_id": 0,
+        "watch_percentage": 100,
+        "rating": 10
+      },
+      {
+        "user_id": 672,
+        "item_id": 815,
+        "ts_epoch": 1540893320,
+        "session_id": 0,
+        "watch_percentage": 100,
+        "rating": 10
+      },
+      {
+        "user_id": 672,
+        "item_id": 7105,
+        "ts_epoch": 1540893584,
+        "session_id": 0,
+        "watch_percentage": 100,
+        "rating": 10
+      }
+    ],
+    "sessions_head3": [
+      {
+        "session_id": 0,
+        "user_id": 672,
+        "n_events": 3,
+        "duration_sec": 822,
+        "n_unique_items": 3
+      },
+      {
+        "session_id": 4,
+        "user_id": 4448,
+        "n_events": 2,
+        "duration_sec": 64,
+        "n_unique_items": 2
+      },
+      {
+        "session_id": 11,
+        "user_id": 72760,
+        "n_events": 3,
+        "duration_sec": 116,
+        "n_unique_items": 3
+      }
+    ]
+  },
+  "data_fingerprints": {
+    "events_sessionized": {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/events_sessionized.parquet",
+      "bytes": 28678,
+      "sha256": "907cfa58598d5900456d8707be3bc8330399055d5ffe0e7100b04fc6e7db1eae"
+    },
+    "sessions": {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/sessions/sessions.parquet",
+      "bytes": 9326,
+      "sha256": "d8f8fdb73ed68fac00a3899bf354a7c0cf8177259cb946d69453519c325f6244"
+    }
+  },
+  "notes": [
+    "30-min gap threshold; sessions with < 2 events discarded. Integer session_ids (cumsum)."
+  ]
+}

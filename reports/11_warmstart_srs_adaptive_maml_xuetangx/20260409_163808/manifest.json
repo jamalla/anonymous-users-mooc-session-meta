@@ -1,0 +1,23 @@
+{
+  "run_id": "54bb17cbfdee40faa0699e2916c9991f",
+  "notebook": "11_warmstart_srs_adaptive_maml_xuetangx",
+  "run_tag": "20260409_163808",
+  "artifacts": [
+    {
+      "type": "results_json",
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/11_warmstart_srs_adaptive_maml_xuetangx/20260409_163808/results_11_warmstart_srs_adaptive_maml_xuetangx.json"
+    },
+    {
+      "type": "checkpoint",
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/models/maml/maml_warmstart_srs_xuetangx.pth"
+    },
+    {
+      "type": "report",
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/11_warmstart_srs_adaptive_maml_xuetangx/20260409_163808/report.json"
+    },
+    {
+      "type": "config",
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/11_warmstart_srs_adaptive_maml_xuetangx/20260409_163808/config.json"
+    }
+  ]
+}

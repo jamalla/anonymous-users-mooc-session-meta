@@ -1,0 +1,26 @@
+{
+  "run_id": "ef6c522c13f0473584d84ead89813e0a",
+  "notebook": "11_warmstart_srs_adaptive_maml_mars",
+  "run_tag": "20260410_095801",
+  "created_at": "2026-04-10T09:58:01",
+  "metrics": {
+    "hr1": 0.17647058823529413,
+    "hr5": 0.2529411764705882,
+    "hr10": 0.27058823529411763,
+    "ndcg10": 0.2182723871031079,
+    "mrr": 0.2072239178833701,
+    "n": 170
+  },
+  "key_findings": [
+    "MAIN CONTRIBUTION (C3) — Warm-Start + SRS-Adaptive MAML: HR@10=27.06%, NDCG@10=21.83%",
+    "Best val HR@10=3.33% at iteration 100",
+    "Hyperparams: alpha_base=0.01, tau=0.5, K_min=3, K_max=7, outer_lr=0.0001, batch=32, iters=3000",
+    "Warm-start from: /home/user/jamalla/anonymous-users-mooc-session-meta/models/baselines/gru_global_mars.pth",
+    "SRS-Adaptive inner loop: alpha_i=alpha_base*SRS_i, K_i=K_min if SRS>=tau else K_max",
+    "Outer loop: SRS-weighted loss sum_i SRS_i * L_query(phi_i)",
+    "Test episodes evaluated: 170, skipped: 0"
+  ],
+  "sanity_samples": {},
+  "data_fingerprints": {},
+  "notes": []
+}

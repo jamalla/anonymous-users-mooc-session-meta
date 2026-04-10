@@ -1,0 +1,25 @@
+{
+  "run_id": "4ff81c5acf28408abe247caa34335a6a",
+  "notebook": "08_warmstart_maml_mars",
+  "run_tag": "20260409_210311",
+  "created_at": "2026-04-09T21:03:11",
+  "metrics": {
+    "hr1": 0.19411764705882353,
+    "hr5": 0.24705882352941178,
+    "hr10": 0.27058823529411763,
+    "ndcg10": 0.2300903233011545,
+    "mrr": 0.22292710143864872,
+    "n": 170
+  },
+  "key_findings": [
+    "Warm-Start MAML ablation: HR@10=27.06%, NDCG@10=23.01%",
+    "Best val HR@10=3.33% at iteration 100",
+    "Hyperparams: alpha=0.01, inner_steps=5, outer_lr=0.0001 (warm-start), batch=32, iters=3000",
+    "Warm-start from: /home/user/jamalla/anonymous-users-mooc-session-meta/models/baselines/gru_global_mars.pth",
+    "Inner loop: standard uniform (no SRS-Adaptive) — ablation only",
+    "Test episodes evaluated: 170, skipped: 0"
+  ],
+  "sanity_samples": {},
+  "data_fingerprints": {},
+  "notes": []
+}

@@ -1,0 +1,17 @@
+{
+  "run_id": "f9e567048fa94754b732aa94b0662ebf",
+  "notebook": "03b_srs_scores_mars",
+  "run_tag": "20260409_184337",
+  "artifacts": [
+    {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/pairs_srs/pairs.parquet",
+      "bytes": 57210,
+      "sha256": "8391e0acfd0e1e3c3d4cb1533a4b458781b6d40ee592bceb102957fad55bc5e9"
+    },
+    {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/pairs_srs/session_srs.parquet",
+      "bytes": 20810,
+      "sha256": "68551f6b967a5fa69399aef7e4749bf74ffe96fcd8279e9202a4f33b069f0e5f"
+    }
+  ]
+}

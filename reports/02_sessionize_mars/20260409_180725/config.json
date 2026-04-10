@@ -1,0 +1,11 @@
+{
+  "notebook": "02_sessionize_mars",
+  "dataset": "mars",
+  "run_id": "08b4af9619dd4d06b030f93d3a9c83d4",
+  "run_tag": "20260409_180725",
+  "seed": 20260107,
+  "sessionization": {
+    "gap_threshold_seconds": 1800,
+    "min_events_per_session": 2
+  }
+}

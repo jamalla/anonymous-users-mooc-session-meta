@@ -1,0 +1,27 @@
+{
+  "notebook": "01_ingest_xuetangx",
+  "dataset": "xuetangx",
+  "run_id": "8524a966b6a14e2b88facc1ce0d9688d",
+  "run_tag": "20260407_210611",
+  "seed": 20260107,
+  "paths": {
+    "raw_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/raw/xuetangx",
+    "out_parquet": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/interim/xuetangx_events_raw.parquet",
+    "out_duckdb": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/interim/xuetangx.duckdb",
+    "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/01_ingest_xuetangx/20260407_210611"
+  },
+  "ingest": {
+    "source_file": "20170201-20170801-raw_user_activity.json",
+    "learning_events_only": true,
+    "learning_event_prefixes": [
+      "load_",
+      "problem_",
+      "video_",
+      "seek_",
+      "speed_",
+      "pause_"
+    ],
+    "parquet_compression": "zstd",
+    "duckdb_view": "xuetangx_events_raw"
+  }
+}

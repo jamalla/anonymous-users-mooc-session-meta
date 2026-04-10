@@ -1,0 +1,39 @@
+{
+  "run_id": "5ca22a8466c14a62a50d94018dc4e71f",
+  "notebook": "08_warmstart_maml_xuetangx",
+  "dataset": "xuetangx",
+  "run_tag": "20260409_142803",
+  "created_at": "2026-04-09T15:10:47",
+  "config": {
+    "K_support": 5,
+    "Q_query": 10,
+    "alpha_base": 0.01,
+    "num_inner_steps": 5,
+    "outer_lr": 0.0001,
+    "batch_size": 32,
+    "n_iterations": 3000,
+    "global_seed": 20260107,
+    "gru_cfg": {
+      "embedding_dim": 64,
+      "hidden_dim": 128,
+      "num_layers": 1,
+      "dropout": 0.0
+    },
+    "warmstart": true,
+    "srs_adaptive": false,
+    "pretrained_path": "/home/user/jamalla/anonymous-users-mooc-session-meta/models/baselines/gru_global_xuetangx.pth"
+  },
+  "test_metrics": {
+    "hr1": 0.2653144016227181,
+    "hr5": 0.4509127789046653,
+    "hr10": 0.5350912778904665,
+    "ndcg10": 0.3906854229358104,
+    "mrr": 0.35701741250266456,
+    "n": 9860
+  },
+  "val_best": {
+    "best_iter": 1600,
+    "best_val_hr10": 0.5475583864118896
+  },
+  "checkpoint": "/home/user/jamalla/anonymous-users-mooc-session-meta/models/maml/maml_warmstart_xuetangx.pth"
+}

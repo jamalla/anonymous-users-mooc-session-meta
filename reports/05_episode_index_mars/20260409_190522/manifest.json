@@ -1,0 +1,19 @@
+{
+  "run_id": "eeedb764f9dc45e99e2d8c44d5b2f024",
+  "notebook": "05_episode_index_mars",
+  "run_tag": "20260409_190522",
+  "artifacts": [
+    {
+      "name": "episodes_train",
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/episodes/episodes_train_K5_Q10.parquet"
+    },
+    {
+      "name": "episodes_val",
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/episodes/episodes_val_K5_Q10.parquet"
+    },
+    {
+      "name": "episodes_test",
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/episodes/episodes_test_K5_Q10.parquet"
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "run_id": "243f8ef0ac5d4224827b9dbfc12bbfd4",
+  "notebook": "03_vocab_pairs_xuetangx",
+  "run_tag": "20260408_130051",
+  "created_at": "2026-04-08T13:00:51",
+  "metrics": {
+    "n_items": 1517,
+    "n_pairs": 487696,
+    "n_users": 70809
+  },
+  "key_findings": [],
+  "sanity_samples": {
+    "pairs_head3": [
+      {
+        "pair_id": 0,
+        "user_id": "1000063",
+        "session_id": "1000063_000002",
+        "prefix": [
+          1287
+        ],
+        "label": 1284,
+        "label_ts_epoch": 1500214063,
+        "prefix_len": 1
+      },
+      {
+        "pair_id": 1,
+        "user_id": "1000063",
+        "session_id": "1000063_000002",
+        "prefix": [
+          1287,
+          1284
+        ],
+        "label": 939,
+        "label_ts_epoch": 1500214095,
+        "prefix_len": 2
+      },
+      {
+        "pair_id": 2,
+        "user_id": "1000063",
+        "session_id": "1000063_000002",
+        "prefix": [
+          1287,
+          1284,
+          939
+        ],
+        "label": 1287,
+        "label_ts_epoch": 1500214140,
+        "prefix_len": 3
+      }
+    ]
+  },
+  "data_fingerprints": {
+    "pairs": {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/xuetangx/pairs/pairs.parquet",
+      "bytes": 6787544,
+      "sha256": "a9a527eb28014995347bdd81258db4d7483f2216a0f5ebad9ac9088cf40a2d4e"
+    }
+  },
+  "notes": []
+}

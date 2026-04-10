@@ -1,0 +1,25 @@
+{
+  "run_id": "5ca22a8466c14a62a50d94018dc4e71f",
+  "notebook": "08_warmstart_maml_xuetangx",
+  "run_tag": "20260409_142803",
+  "created_at": "2026-04-09T14:28:03",
+  "metrics": {
+    "hr1": 0.2653144016227181,
+    "hr5": 0.4509127789046653,
+    "hr10": 0.5350912778904665,
+    "ndcg10": 0.3906854229358104,
+    "mrr": 0.35701741250266456,
+    "n": 9860
+  },
+  "key_findings": [
+    "Warm-Start MAML ablation: HR@10=53.51%, NDCG@10=39.07%",
+    "Best val HR@10=54.76% at iteration 1600",
+    "Hyperparams: alpha=0.01, inner_steps=5, outer_lr=0.0001 (warm-start), batch=32, iters=3000",
+    "Warm-start from: /home/user/jamalla/anonymous-users-mooc-session-meta/models/baselines/gru_global_xuetangx.pth",
+    "Inner loop: standard uniform (no SRS-Adaptive) — ablation only",
+    "Test episodes evaluated: 9860, skipped: 0"
+  ],
+  "sanity_samples": {},
+  "data_fingerprints": {},
+  "notes": []
+}

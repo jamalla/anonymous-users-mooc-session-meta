@@ -1,0 +1,122 @@
+{
+  "run_id": "f9e567048fa94754b732aa94b0662ebf",
+  "notebook": "03b_srs_scores_mars",
+  "run_tag": "20260409_184337",
+  "created_at": "2026-04-09T18:43:37",
+  "metrics": {
+    "n_pairs": 2333,
+    "n_sessions": 561,
+    "cap_intensity": 18.0,
+    "cap_extent": 3919.0,
+    "cap_composition": 18.0,
+    "srs_mean": 0.2548333778966132,
+    "srs_std": 0.2367880938193921,
+    "srs_p50": 0.154282,
+    "srs_p75": 0.296183,
+    "tier_low": 0.7825311942959001,
+    "tier_medium": 0.13012477718360071,
+    "tier_high": 0.0873440285204991,
+    "n_missing_srs": 0
+  },
+  "key_findings": [],
+  "sanity_samples": {
+    "session_srs_head3": [
+      {
+        "session_id": 0,
+        "user_id": 672,
+        "n_events": 3,
+        "duration_sec": 822,
+        "n_unique_items": 3,
+        "srs": 0.181027,
+        "srs_intensity": 0.16666666666666666,
+        "srs_extent": 0.20974738453687164,
+        "srs_composition": 0.16666666666666666
+      },
+      {
+        "session_id": 4,
+        "user_id": 4448,
+        "n_events": 2,
+        "duration_sec": 64,
+        "n_unique_items": 2,
+        "srs": 0.079518,
+        "srs_intensity": 0.1111111111111111,
+        "srs_extent": 0.01633069660627711,
+        "srs_composition": 0.1111111111111111
+      },
+      {
+        "session_id": 11,
+        "user_id": 72760,
+        "n_events": 3,
+        "duration_sec": 116,
+        "n_unique_items": 3,
+        "srs": 0.120978,
+        "srs_intensity": 0.16666666666666666,
+        "srs_extent": 0.029599387598877265,
+        "srs_composition": 0.16666666666666666
+      }
+    ],
+    "pairs_srs_head3": [
+      {
+        "pair_id": 0,
+        "user_id": 672,
+        "session_id": 0,
+        "prefix": [
+          12
+        ],
+        "label": 114,
+        "label_ts_epoch": 1540893320,
+        "prefix_len": 1,
+        "srs": 0.181027,
+        "srs_intensity": 0.16666666666666666,
+        "srs_extent": 0.20974738453687164,
+        "srs_composition": 0.16666666666666666
+      },
+      {
+        "pair_id": 1,
+        "user_id": 672,
+        "session_id": 0,
+        "prefix": [
+          12,
+          114
+        ],
+        "label": 224,
+        "label_ts_epoch": 1540893584,
+        "prefix_len": 2,
+        "srs": 0.181027,
+        "srs_intensity": 0.16666666666666666,
+        "srs_extent": 0.20974738453687164,
+        "srs_composition": 0.16666666666666666
+      },
+      {
+        "pair_id": 2,
+        "user_id": 4448,
+        "session_id": 4,
+        "prefix": [
+          655
+        ],
+        "label": 656,
+        "label_ts_epoch": 1584478316,
+        "prefix_len": 1,
+        "srs": 0.079518,
+        "srs_intensity": 0.1111111111111111,
+        "srs_extent": 0.01633069660627711,
+        "srs_composition": 0.1111111111111111
+      }
+    ]
+  },
+  "data_fingerprints": {
+    "pairs_srs": {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/pairs_srs/pairs.parquet",
+      "bytes": 57210,
+      "sha256": "8391e0acfd0e1e3c3d4cb1533a4b458781b6d40ee592bceb102957fad55bc5e9"
+    },
+    "session_srs": {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/processed/mars/pairs_srs/session_srs.parquet",
+      "bytes": 20810,
+      "sha256": "68551f6b967a5fa69399aef7e4749bf74ffe96fcd8279e9202a4f33b069f0e5f"
+    }
+  },
+  "notes": [
+    "MARS SRS: composition = min(n_unique_items / CAP_COMPOSITION, 1.0). No action_types in MARS — adapted formula uses item diversity instead. CAPs from ALL sessions (re-run after NB04). "
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "run_id": "2c6d52ee95104629b778406c382a1844",
+  "notebook": "01_ingest_mars",
+  "run_tag": "20260409_180531",
+  "artifacts": [
+    {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/interim/mars/interactions.parquet",
+      "bytes": 32047,
+      "sha256": "cf05565658572e06f057aedeb42a5110e4d16e5dad6e284ccf8923a9fb77bab1"
+    },
+    {
+      "path": "/home/user/jamalla/anonymous-users-mooc-session-meta/data/interim/mars.duckdb",
+      "bytes": 274432,
+      "sha256": "c8481c63018da4dab7c79100be6b47b10919c533d0a350b4c5c0df30c91c8987"
+    }
+  ]
+}

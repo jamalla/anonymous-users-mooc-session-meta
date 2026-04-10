@@ -1,0 +1,26 @@
+{
+  "run_id": "54bb17cbfdee40faa0699e2916c9991f",
+  "notebook": "11_warmstart_srs_adaptive_maml_xuetangx",
+  "run_tag": "20260409_163808",
+  "created_at": "2026-04-09T16:38:08",
+  "metrics": {
+    "hr1": 0.2614604462474645,
+    "hr5": 0.4432048681541582,
+    "hr10": 0.5274847870182556,
+    "ndcg10": 0.3843187324665491,
+    "mrr": 0.35126203041685566,
+    "n": 9860
+  },
+  "key_findings": [
+    "MAIN CONTRIBUTION (C3) — Warm-Start + SRS-Adaptive MAML: HR@10=52.75%, NDCG@10=38.43%",
+    "Best val HR@10=54.00% at iteration 800",
+    "Hyperparams: alpha_base=0.01, tau=0.5, K_min=3, K_max=7, outer_lr=0.0001, batch=32, iters=3000",
+    "Warm-start from: /home/user/jamalla/anonymous-users-mooc-session-meta/models/baselines/gru_global_xuetangx.pth",
+    "SRS-Adaptive inner loop: alpha_i=alpha_base*SRS_i, K_i=K_min if SRS>=tau else K_max",
+    "Outer loop: SRS-weighted loss sum_i SRS_i * L_query(phi_i)",
+    "Test episodes evaluated: 9860, skipped: 0"
+  ],
+  "sanity_samples": {},
+  "data_fingerprints": {},
+  "notes": []
+}

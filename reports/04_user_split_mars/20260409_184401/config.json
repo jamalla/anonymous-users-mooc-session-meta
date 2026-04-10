@@ -1,0 +1,10 @@
+{
+  "notebook": "04_user_split_mars",
+  "dataset": "mars",
+  "seed": 20260107,
+  "split": {
+    "train": 0.7,
+    "val": 0.15,
+    "test": 0.15
+  }
+}
