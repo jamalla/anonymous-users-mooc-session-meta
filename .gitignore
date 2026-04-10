@@ -22,6 +22,7 @@ results/*
 
 docs/*
 scripts/*
+old/*
 
 # Model artifacts
 *.pt

@@ -1,305 +1,105 @@
 """
-Data loading utilities for the Streamlit app.
-Updated to load from notebook reports with HR@10/NDCG@10 metrics.
+data_loader.py — Load pipeline report JSONs for the Streamlit app.
+All data comes exclusively from ./reports/*/report.json files.
 """
 
 import json
-import pandas as pd
-import numpy as np
+import sys
 from pathlib import Path
-from typing import Dict, Any, Optional, List
-from datetime import datetime
+
+import streamlit as st
+
+
+# ── Repo root resolution ──────────────────────────────────────────────────────
 
 def find_repo_root() -> Path:
-    """Find the repository root directory."""
-    current = Path(__file__).resolve().parent
-    for p in [current, *current.parents]:
+    start = Path(__file__).resolve()
+    for p in [start, *start.parents]:
         if (p / "PROJECT_STATE.md").exists():
             return p
-    return current.parent.parent
+    raise RuntimeError("Cannot find repo root (PROJECT_STATE.md not found)")
+
 
 REPO_ROOT = find_repo_root()
+REPORTS_DIR = REPO_ROOT / "reports"
 
-# Dataset configurations
-DATASETS = {
-    "XuetangX": {
-        "name": "XuetangX",
-        "description": "Large Chinese MOOC Platform",
-        "raw_path": REPO_ROOT / "data" / "raw" / "xuetangx",
-        "interim_path": REPO_ROOT / "data" / "interim" / "xuetangx",
-        "processed_path": REPO_ROOT / "data" / "processed" / "xuetangx",
-        "results_path": REPO_ROOT / "results",
-        "models_path": REPO_ROOT / "models" / "baselines",
-        "reports_path": REPO_ROOT / "reports",
-    },
+# Canonical notebook name prefix per dataset
+DATASET_PREFIX = {
+    "XuetangX": "xuetangx",
+    "MARS": "mars",
 }
 
-# Current best results from notebooks (hardcoded for reliability)
-CURRENT_RESULTS = {
-    "XuetangX": {
-        "vanilla_maml": {
-            "notebook": "07_maml_xuetangx",
-            "test_HR@10": 47.35,
-            "test_NDCG@10": 37.41,
-            "description": "Vanilla MAML (random init)",
-        },
-        "reliability_maml": {
-            "notebook": "11_reliability_weighted_maml_xuetangx",
-            "test_HR@10": 48.34,
-            "test_NDCG@10": 37.71,
-            "description": "Reliability-Weighted MAML",
-        },
-        "warmstart_reliability_maml": {
-            "notebook": "12_warmstart_reliability_maml_xuetangx",
-            "test_HR@10": 55.62,
-            "test_NDCG@10": 44.80,
-            "description": "Warm-Start + Reliability-Weighted MAML",
-        },
-        "gru_baseline": {
-            "notebook": "06_baselines_xuetangx",
-            "test_HR@10": 33.55,
-            "test_NDCG@10": 25.0,
-            "description": "GRU4Rec Global Baseline",
-        },
-    }
-}
+# All pipeline notebook stages (suffix appended to dataset prefix)
+PIPELINE_STAGES = [
+    "01_ingest",
+    "02_sessionize",
+    "03_vocab_pairs",
+    "03b_srs_scores",
+    "04_user_split",
+    "05_episode_index",
+    "06_base_model_selection",
+    "07_standard_maml",
+    "08_warmstart_maml",
+    "09_srs_validation",
+    "10_srs_adaptive_maml",
+    "11_warmstart_srs_adaptive_maml",
+]
 
-def get_dataset_config(dataset_name: str) -> Dict[str, Any]:
-    """Get configuration for a dataset."""
-    return DATASETS.get(dataset_name, DATASETS["XuetangX"])
 
-def load_json(path: Path) -> Optional[Dict]:
-    """Load a JSON file."""
-    if path.exists():
-        with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return None
+# ── Core loader ───────────────────────────────────────────────────────────────
 
-def load_parquet(path: Path) -> Optional[pd.DataFrame]:
-    """Load a parquet file."""
-    if path.exists():
-        return pd.read_parquet(path)
-    return None
-
-def get_latest_report(notebook_name: str) -> Optional[Dict]:
-    """Get the latest report for a notebook."""
-    reports_dir = REPO_ROOT / "reports" / notebook_name
-
-    if not reports_dir.exists():
+def load_latest(nb_name: str):
+    """Return metrics dict from the most recent report.json for nb_name, or None."""
+    d = REPORTS_DIR / nb_name
+    if not d.exists():
         return None
-
-    # Find all run directories
-    run_dirs = [d for d in reports_dir.iterdir() if d.is_dir()]
-
-    if not run_dirs:
-        return None
-
-    # Sort by name (which is timestamp-based) and get the latest
-    run_dirs.sort(key=lambda x: x.name, reverse=True)
-
-    for run_dir in run_dirs:
-        report_path = run_dir / "report.json"
-        if report_path.exists():
-            return load_json(report_path)
-
+    for run in reversed(sorted(d.iterdir())):
+        rp = run / "report.json"
+        if rp.exists():
+            return json.loads(rp.read_text("utf-8"))
     return None
 
-def load_raw_data(dataset_name: str) -> Optional[pd.DataFrame]:
-    """Load raw data for a dataset."""
-    config = get_dataset_config(dataset_name)
 
-    if dataset_name == "XuetangX":
-        # XuetangX uses JSON files, load interim instead
-        interim_file = config["interim_path"] / "interactions.parquet"
-        if interim_file.exists():
-            return pd.read_parquet(interim_file)
-    return None
-
-def load_interactions(dataset_name: str) -> Optional[pd.DataFrame]:
-    """Load interactions from interim data."""
-    if dataset_name == "XuetangX":
-        # XuetangX uses a different file name and structure
-        path = REPO_ROOT / "data" / "interim" / "xuetangx_events_raw.parquet"
-        df = load_parquet(path)
-        if df is not None:
-            # Normalize column names: rename course_id to item_id, timestamp to ts_epoch
-            df = df.rename(columns={"course_id": "item_id"})
-            # Convert timestamp to epoch if needed
-            if "timestamp" in df.columns and "ts_epoch" not in df.columns:
-                df["ts_epoch"] = pd.to_datetime(df["timestamp"]).astype(int) // 10**9
-        return df
-    else:
-        # MARS uses standard path
-        config = get_dataset_config(dataset_name)
-        path = config["interim_path"] / "interactions.parquet"
-        return load_parquet(path)
-
-def load_sessions(dataset_name: str) -> Optional[pd.DataFrame]:
-    """Load sessionized data."""
-    config = get_dataset_config(dataset_name)
-    path = config["processed_path"] / "sessions" / "sessions.parquet"
-    return load_parquet(path)
-
-def load_pairs(dataset_name: str, split: str = "train") -> Optional[pd.DataFrame]:
-    """Load prefix-target pairs."""
-    config = get_dataset_config(dataset_name)
-    path = config["processed_path"] / "pairs" / f"pairs_{split}.parquet"
-    return load_parquet(path)
-
-def load_pairs_with_reliability(dataset_name: str) -> Optional[pd.DataFrame]:
-    """Load prefix-target pairs with reliability scores."""
-    config = get_dataset_config(dataset_name)
-    path = config["processed_path"] / "pairs_with_reliability" / "pairs.parquet"
-    return load_parquet(path)
-
-def load_episodes(dataset_name: str, split: str = "train", K: int = 5, Q: int = 10) -> Optional[pd.DataFrame]:
-    """Load episodes for meta-learning."""
-    config = get_dataset_config(dataset_name)
-    path = config["processed_path"] / "episodes" / f"episodes_{split}_K{K}_Q{Q}.parquet"
-    return load_parquet(path)
-
-def load_vocab(dataset_name: str) -> Optional[Dict]:
-    """Load vocabulary mapping."""
-    config = get_dataset_config(dataset_name)
-
-    # Try different vocab file names
-    for filename in ["item2id.json", "course2id.json"]:
-        path = config["processed_path"] / "vocab" / filename
-        if path.exists():
-            return load_json(path)
-    return None
-
-def load_baseline_results(dataset_name: str) -> Optional[Dict]:
-    """Load baseline results from NB06 report."""
-    # Try to load from reports
-    report = get_latest_report("06_baselines_xuetangx")
-
-    if report and report.get("metrics"):
-        return report
-
-    # Fallback to hardcoded results
-    return {
-        "baselines": {
-            "gru_global": {
-                "HR@10": CURRENT_RESULTS["XuetangX"]["gru_baseline"]["test_HR@10"],
-                "NDCG@10": CURRENT_RESULTS["XuetangX"]["gru_baseline"]["test_NDCG@10"],
-            }
-        }
-    }
-
-def load_maml_results(dataset_name: str, variant: str = "vanilla") -> Optional[Dict]:
+@st.cache_data(show_spinner=False)
+def load_dataset_reports(dataset: str) -> dict:
     """
-    Load MAML results for a specific variant.
-
-    Variants:
-    - "vanilla": Basic MAML (NB07)
-    - "reliability": Reliability-Weighted MAML (NB11)
-    - "warmstart_reliability": Warm-Start + Reliability (NB12)
+    Load all available pipeline reports for the given dataset.
+    Returns a dict keyed by stage name (e.g. '01_ingest') → full report dict.
+    Missing stages have None values.
     """
-    notebook_map = {
-        "vanilla": "07_maml_xuetangx",
-        "basic": "07_maml_xuetangx",
-        "reliability": "11_reliability_weighted_maml_xuetangx",
-        "warmstart_reliability": "12_warmstart_reliability_maml_xuetangx",
-        "combined": "12_warmstart_reliability_maml_xuetangx",
-    }
+    prefix = DATASET_PREFIX[dataset]
+    reports = {}
+    for stage in PIPELINE_STAGES:
+        nb_name = f"{stage}_{prefix}"
+        reports[stage] = load_latest(nb_name)
+    return reports
 
-    notebook_name = notebook_map.get(variant, "07_maml_xuetangx")
-    report = get_latest_report(notebook_name)
 
-    if report:
-        return report
+@st.cache_data(show_spinner=False)
+def load_both_datasets() -> dict:
+    """Load reports for both datasets; returns {'XuetangX': {...}, 'MARS': {...}}."""
+    return {ds: load_dataset_reports(ds) for ds in DATASET_PREFIX}
 
-    # Fallback to hardcoded results
-    variant_key_map = {
-        "vanilla": "vanilla_maml",
-        "basic": "vanilla_maml",
-        "reliability": "reliability_maml",
-        "warmstart_reliability": "warmstart_reliability_maml",
-        "combined": "warmstart_reliability_maml",
-    }
 
-    key = variant_key_map.get(variant, "vanilla_maml")
-    hardcoded = CURRENT_RESULTS["XuetangX"].get(key, {})
+# ── Convenience accessors ─────────────────────────────────────────────────────
 
-    return {
-        "results": {
-            "test_HR@10": hardcoded.get("test_HR@10", 0),
-            "test_NDCG@10": hardcoded.get("test_NDCG@10", 0),
-        },
-        "description": hardcoded.get("description", ""),
-    }
-
-def get_all_maml_comparison(dataset_name: str = "XuetangX") -> pd.DataFrame:
-    """Get comparison dataframe of all MAML variants."""
-    data = []
-
-    # Vanilla MAML (NB07)
-    vanilla = load_maml_results(dataset_name, "vanilla")
-    if vanilla:
-        results = vanilla.get("results", vanilla.get("metrics", {}))
-        data.append({
-            "Method": "Vanilla MAML",
-            "Notebook": "NB07",
-            "HR@10": results.get("test_HR@10", CURRENT_RESULTS["XuetangX"]["vanilla_maml"]["test_HR@10"]),
-            "NDCG@10": results.get("test_NDCG@10", CURRENT_RESULTS["XuetangX"]["vanilla_maml"]["test_NDCG@10"]),
-        })
-
-    # Reliability-Weighted MAML (NB11)
-    reliability = load_maml_results(dataset_name, "reliability")
-    if reliability:
-        results = reliability.get("results", reliability.get("metrics", {}))
-        data.append({
-            "Method": "Reliability-Weighted MAML",
-            "Notebook": "NB11",
-            "HR@10": results.get("test_HR@10", CURRENT_RESULTS["XuetangX"]["reliability_maml"]["test_HR@10"]),
-            "NDCG@10": results.get("test_NDCG@10", CURRENT_RESULTS["XuetangX"]["reliability_maml"]["test_NDCG@10"]),
-        })
-
-    # Warm-Start + Reliability (NB12)
-    combined = load_maml_results(dataset_name, "warmstart_reliability")
-    if combined:
-        results = combined.get("results", combined.get("metrics", {}))
-        data.append({
-            "Method": "Warm-Start + Reliability",
-            "Notebook": "NB12",
-            "HR@10": results.get("test_HR@10", CURRENT_RESULTS["XuetangX"]["warmstart_reliability_maml"]["test_HR@10"]),
-            "NDCG@10": results.get("test_NDCG@10", CURRENT_RESULTS["XuetangX"]["warmstart_reliability_maml"]["test_NDCG@10"]),
-        })
-
-    return pd.DataFrame(data)
-
-def compute_gap_statistics(df: pd.DataFrame) -> Dict[str, Any]:
-    """Compute gap statistics from interactions dataframe."""
-    # Handle different timestamp column names
-    ts_col = "ts_epoch" if "ts_epoch" in df.columns else "timestamp"
-
-    # Convert timestamp to numeric if needed
-    if ts_col == "timestamp":
-        df = df.copy()
-        df["ts_epoch"] = pd.to_datetime(df["timestamp"]).astype(int) // 10**9
-        ts_col = "ts_epoch"
-
-    df = df.sort_values(["user_id", ts_col]).reset_index(drop=True)
-    df["prev_ts"] = df.groupby("user_id")[ts_col].shift(1)
-    df["gap_seconds"] = df[ts_col] - df["prev_ts"]
-
-    gaps = df["gap_seconds"].dropna()
-
-    if len(gaps) == 0:
+def metrics(reports: dict, stage: str) -> dict:
+    """Return the metrics sub-dict for a stage, or {} if unavailable."""
+    r = reports.get(stage)
+    if r is None:
         return {}
+    return r.get("metrics", {})
 
-    return {
-        "n_gaps": len(gaps),
-        "min_seconds": float(gaps.min()),
-        "max_seconds": float(gaps.max()),
-        "mean_seconds": float(gaps.mean()),
-        "median_seconds": float(gaps.median()),
-        "p25_seconds": float(np.percentile(gaps, 25)),
-        "p75_seconds": float(np.percentile(gaps, 75)),
-        "p90_seconds": float(np.percentile(gaps, 90)),
-        "p95_seconds": float(np.percentile(gaps, 95)),
-        "p99_seconds": float(np.percentile(gaps, 99)),
-        "pct_within_30min": float((gaps <= 1800).mean() * 100),
-        "gaps": gaps,
-    }
+
+def key_findings(reports: dict, stage: str) -> list:
+    r = reports.get(stage)
+    if r is None:
+        return []
+    return r.get("key_findings", [])
+
+
+def run_tag(reports: dict, stage: str) -> str:
+    r = reports.get(stage)
+    if r is None:
+        return "n/a"
+    return r.get("run_tag", "n/a")

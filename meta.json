@@ -2,74 +2,326 @@
   "schema_version": 1,
   "runs": [
     {
-      "run_id": "3980ad5159da45da83a10f1d6c8ba04b",
-      "notebook": "00_bootstrap_and_conventions",
-      "run_tag": "20260201_020106",
-      "out_dir": "/workspace/anonymous-users-mooc-session-meta/reports/00_bootstrap_and_conventions/20260201_020106",
-      "created_at": "2026-02-01T02:01:06"
-    },
-    {
-      "run_id": "9306ac8f3733429d835b36c3ac138d43",
+      "run_id": "8524a966b6a14e2b88facc1ce0d9688d",
       "notebook": "01_ingest_xuetangx",
-      "run_tag": "20260201_020135",
-      "out_dir": "/workspace/anonymous-users-mooc-session-meta/reports/01_ingest_xuetangx/20260201_020135",
-      "created_at": "2026-02-01T02:01:35"
+      "run_tag": "20260407_210611",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/01_ingest_xuetangx/20260407_210611",
+      "created_at": "2026-04-07T21:06:11"
     },
     {
-      "run_id": "0911fa8195d143e1981f006fa046dd1d",
+      "run_id": "c1f619780f8b4b78bee95ac496d90591",
+      "notebook": "01_ingest_xuetangx",
+      "run_tag": "20260408_125223",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/01_ingest_xuetangx/20260408_125223",
+      "created_at": "2026-04-08T12:52:23"
+    },
+    {
+      "run_id": "8996dd03af13433c93f5b52e6bb07f86",
       "notebook": "02_sessionize_xuetangx",
-      "run_tag": "20260201_023307",
-      "out_dir": "/workspace/anonymous-users-mooc-session-meta/reports/02_sessionize_xuetangx/20260201_023307",
-      "created_at": "2026-02-01T02:33:07"
+      "run_tag": "20260408_125611",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/02_sessionize_xuetangx/20260408_125611",
+      "created_at": "2026-04-08T12:56:11"
     },
     {
-      "run_id": "9d1184fd7be24e5283933aa1094afaee",
-      "notebook": "02_sessionize_xuetangx",
-      "run_tag": "20260201_023704",
-      "out_dir": "/workspace/anonymous-users-mooc-session-meta/reports/02_sessionize_xuetangx/20260201_023704",
-      "created_at": "2026-02-01T02:37:04"
+      "run_id": "243f8ef0ac5d4224827b9dbfc12bbfd4",
+      "notebook": "03_vocab_pairs_xuetangx",
+      "run_tag": "20260408_130051",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/03_vocab_pairs_xuetangx/20260408_130051"
     },
     {
-      "run_id": "59d25aefcd714359bd8a6bfe3cf105b4",
-      "notebook": "03_build_vocab_pairs_xuetangx",
-      "run_tag": "20260201_024613",
-      "out_dir": "/workspace/anonymous-users-mooc-session-meta/reports/03_build_vocab_pairs_xuetangx/20260201_024613",
-      "created_at": "2026-02-01T02:46:13"
+      "run_id": "944e7f9f71ec4ce4897a7bff4d055e7c",
+      "notebook": "03b_srs_scores_xuetangx",
+      "run_tag": "20260408_135148",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/03b_srs_scores_xuetangx/20260408_135148"
     },
     {
-      "run_id": "2e5cd0fdb2a54055b195a07036065a0a",
+      "run_id": "02da0b1af51b4b92a7202a7c5a4e31a3",
+      "notebook": "03b_srs_scores_xuetangx",
+      "run_tag": "20260408_141027",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/03b_srs_scores_xuetangx/20260408_141027"
+    },
+    {
+      "run_id": "3c63e8ec7eb0452fb3b690044f79699a",
+      "notebook": "03b_srs_scores_xuetangx",
+      "run_tag": "20260408_141054",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/03b_srs_scores_xuetangx/20260408_141054"
+    },
+    {
+      "run_id": "2ee733fca77e46d58c4727b6fea2d8e9",
       "notebook": "04_user_split_xuetangx",
-      "run_tag": "20260201_024818",
-      "out_dir": "/workspace/anonymous-users-mooc-session-meta/reports/04_user_split_xuetangx/20260201_024818",
-      "created_at": "2026-02-01T02:48:18"
+      "run_tag": "20260408_141441",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/04_user_split_xuetangx/20260408_141441"
     },
     {
-      "run_id": "d813183c532a4e1c84d62eafee268703",
+      "run_id": "23749b4d160d474a80b082aa21719e65",
       "notebook": "05_episode_index_xuetangx",
-      "run_tag": "20260201_024858",
-      "out_dir": "/workspace/anonymous-users-mooc-session-meta/reports/05_episode_index_xuetangx/20260201_024858",
-      "created_at": "2026-02-01T02:48:58"
+      "run_tag": "20260408_141524",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/05_episode_index_xuetangx/20260408_141524"
     },
     {
-      "run_id": "e70c815502da46fa8a61184c66b84830",
+      "run_id": "dd5b3465ba36401e8f1e04f12593ca3a",
+      "notebook": "05_episode_index_xuetangx",
+      "run_tag": "20260408_142248",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/05_episode_index_xuetangx/20260408_142248"
+    },
+    {
+      "run_id": "7e75fa70bffc473e9ae2850074585fa9",
+      "notebook": "05_episode_index_xuetangx",
+      "run_tag": "20260408_142504",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/05_episode_index_xuetangx/20260408_142504"
+    },
+    {
+      "run_id": "ab45ab263c5f4605a58d5c972546f119",
       "notebook": "06_base_model_selection_xuetangx",
-      "run_tag": "20260201_025004",
-      "out_dir": "/workspace/anonymous-users-mooc-session-meta/reports/06_base_model_selection_xuetangx/20260201_025004",
-      "created_at": "2026-02-01T02:50:04"
+      "run_tag": "20260408_142613",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/06_base_model_selection_xuetangx/20260408_142613"
     },
     {
-      "run_id": "31abc58340e246ea8614ab44ba7d2f5b",
-      "notebook": "07_maml_xuetangx",
-      "run_tag": "20260201_025624",
-      "created_at": "2026-02-01T02:56:24",
-      "status": "started"
+      "run_id": "4886264b040b4f808d208c8abaaf829b",
+      "notebook": "06_base_model_selection_xuetangx",
+      "run_tag": "20260408_142852",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/06_base_model_selection_xuetangx/20260408_142852"
     },
     {
-      "run_id": "34234011e7c24a588c860f15cd68f39b",
-      "notebook": "03b_build_pairs_with_events_xuetangx",
-      "run_tag": "20260204_024509",
-      "out_dir": "/workspace/anonymous-users-mooc-session-meta/reports/03b_build_pairs_with_events_xuetangx/20260204_024509",
-      "created_at": "2026-02-04T02:45:09"
+      "run_id": "a8b3e34e5f204983a164f85e3130acb8",
+      "notebook": "06_base_model_selection_xuetangx",
+      "run_tag": "20260408_145211",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/06_base_model_selection_xuetangx/20260408_145211"
+    },
+    {
+      "run_id": "ddeab00debff4b0fba9797bf2e7c3749",
+      "notebook": "06_base_model_selection_xuetangx",
+      "run_tag": "20260408_145524",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/06_base_model_selection_xuetangx/20260408_145524"
+    },
+    {
+      "run_id": "95f6648e3f1a4dd8a9383ec4471f16d3",
+      "notebook": "06_base_model_selection_xuetangx",
+      "run_tag": "20260408_150852",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/06_base_model_selection_xuetangx/20260408_150852"
+    },
+    {
+      "run_id": "aeeffdeec7d442ef9f69c28badeb9feb",
+      "notebook": "06_base_model_selection_xuetangx",
+      "run_tag": "20260408_221755",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/06_base_model_selection_xuetangx/20260408_221755"
+    },
+    {
+      "run_id": "a7ba210bd672407dbfb5a32badfdf98c",
+      "notebook": "07_standard_maml_xuetangx",
+      "run_tag": "20260408_231721",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/07_standard_maml_xuetangx/20260408_231721"
+    },
+    {
+      "run_id": "bb22828e26994983b3ff5838bdf261ac",
+      "notebook": "07_standard_maml_xuetangx",
+      "run_tag": "20260408_232645",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/07_standard_maml_xuetangx/20260408_232645"
+    },
+    {
+      "run_id": "1ba43e6d2f3f4fef8edcc13ae0b07905",
+      "notebook": "07_standard_maml_xuetangx",
+      "run_tag": "20260409_000414",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/07_standard_maml_xuetangx/20260409_000414"
+    },
+    {
+      "run_id": "fdc24db226074cf5b1c64a1f16e495d3",
+      "notebook": "07_standard_maml_xuetangx",
+      "run_tag": "20260409_000748",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/07_standard_maml_xuetangx/20260409_000748"
+    },
+    {
+      "run_id": "0b3eb15dd35943f1bf35bba5f566c4fc",
+      "notebook": "07_standard_maml_xuetangx",
+      "run_tag": "20260409_001805",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/07_standard_maml_xuetangx/20260409_001805"
+    },
+    {
+      "run_id": "a807b239c9ac4f47b247773c3d655fd6",
+      "notebook": "07_standard_maml_xuetangx",
+      "run_tag": "20260409_003118",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/07_standard_maml_xuetangx/20260409_003118"
+    },
+    {
+      "run_id": "22e60a3b17e24644a63b665d43be52c8",
+      "notebook": "07_standard_maml_xuetangx",
+      "run_tag": "20260409_003516",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/07_standard_maml_xuetangx/20260409_003516"
+    },
+    {
+      "run_id": "bb420fc71dd94090afd8ff78a0d4b021",
+      "notebook": "07_standard_maml_xuetangx",
+      "run_tag": "20260409_102912",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/07_standard_maml_xuetangx/20260409_102912"
+    },
+    {
+      "run_id": "c484130d4df14036aebdcb8c737ed84d",
+      "notebook": "07_standard_maml_xuetangx",
+      "run_tag": "20260409_103759",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/07_standard_maml_xuetangx/20260409_103759"
+    },
+    {
+      "run_id": "1d33eeed302448e7bed54f364bc94fd0",
+      "notebook": "07_standard_maml_xuetangx",
+      "run_tag": "20260409_104139",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/07_standard_maml_xuetangx/20260409_104139"
+    },
+    {
+      "run_id": "868193768aad433d897320f789a72a48",
+      "notebook": "07_standard_maml_xuetangx",
+      "run_tag": "20260409_111042",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/07_standard_maml_xuetangx/20260409_111042"
+    },
+    {
+      "run_id": "83712f85011c4a12a47c51a27403f26c",
+      "notebook": "07_standard_maml_xuetangx",
+      "run_tag": "20260409_130842",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/07_standard_maml_xuetangx/20260409_130842"
+    },
+    {
+      "run_id": "54d388a4b5204ce089597e2aad737d1d",
+      "notebook": "07_standard_maml_xuetangx",
+      "run_tag": "20260409_131647",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/07_standard_maml_xuetangx/20260409_131647"
+    },
+    {
+      "run_id": "c38c4beca2b94117924e2882397e1115",
+      "notebook": "08_warmstart_maml_xuetangx",
+      "run_tag": "20260409_141418",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/08_warmstart_maml_xuetangx/20260409_141418"
+    },
+    {
+      "run_id": "5ca22a8466c14a62a50d94018dc4e71f",
+      "notebook": "08_warmstart_maml_xuetangx",
+      "run_tag": "20260409_142803",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/08_warmstart_maml_xuetangx/20260409_142803"
+    },
+    {
+      "run_id": "a715f584f37c487c9a2f9906fb585c21",
+      "notebook": "09_srs_validation_xuetangx",
+      "run_tag": "20260409_155532",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/09_srs_validation_xuetangx/20260409_155532"
+    },
+    {
+      "run_id": "6c0742bcd7e54567bb11af1f62f431de",
+      "notebook": "10_srs_adaptive_maml_xuetangx",
+      "run_tag": "20260409_155705",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/10_srs_adaptive_maml_xuetangx/20260409_155705"
+    },
+    {
+      "run_id": "54bb17cbfdee40faa0699e2916c9991f",
+      "notebook": "11_warmstart_srs_adaptive_maml_xuetangx",
+      "run_tag": "20260409_163808",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/11_warmstart_srs_adaptive_maml_xuetangx/20260409_163808"
+    },
+    {
+      "run_id": "2c6d52ee95104629b778406c382a1844",
+      "notebook": "01_ingest_mars",
+      "run_tag": "20260409_180531",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/01_ingest_mars/20260409_180531",
+      "created_at": "2026-04-09T18:05:31"
+    },
+    {
+      "run_id": "08b4af9619dd4d06b030f93d3a9c83d4",
+      "notebook": "02_sessionize_mars",
+      "run_tag": "20260409_180725",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/02_sessionize_mars/20260409_180725"
+    },
+    {
+      "run_id": "0c22d65a33784b53ad0a4308c3dc17d9",
+      "notebook": "03_vocab_pairs_mars",
+      "run_tag": "20260409_180743",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/03_vocab_pairs_mars/20260409_180743"
+    },
+    {
+      "run_id": "4ea533dc029747c6a2726d27a5d95a65",
+      "notebook": "03b_srs_scores_mars",
+      "run_tag": "20260409_180905",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/03b_srs_scores_mars/20260409_180905"
+    },
+    {
+      "run_id": "f9e567048fa94754b732aa94b0662ebf",
+      "notebook": "03b_srs_scores_mars",
+      "run_tag": "20260409_184337",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/03b_srs_scores_mars/20260409_184337"
+    },
+    {
+      "run_id": "d82c7ef58cf045eaa5b71c052cf86085",
+      "notebook": "04_user_split_mars",
+      "run_tag": "20260409_184401",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/04_user_split_mars/20260409_184401"
+    },
+    {
+      "run_id": "d563e43b75a545deb648a63645df57b4",
+      "notebook": "05_episode_index_mars",
+      "run_tag": "20260409_184450",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/05_episode_index_mars/20260409_184450"
+    },
+    {
+      "run_id": "ac4346736eb1419e954ba0e70a7214c2",
+      "notebook": "03b_srs_scores_mars",
+      "run_tag": "20260409_190447",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/03b_srs_scores_mars/20260409_190447"
+    },
+    {
+      "run_id": "7312410b9d9b4f089872f0303d836108",
+      "notebook": "04_user_split_mars",
+      "run_tag": "20260409_190506",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/04_user_split_mars/20260409_190506"
+    },
+    {
+      "run_id": "eeedb764f9dc45e99e2d8c44d5b2f024",
+      "notebook": "05_episode_index_mars",
+      "run_tag": "20260409_190522",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/05_episode_index_mars/20260409_190522"
+    },
+    {
+      "run_id": "d741ef9eccd24333bcdc99bfa1580930",
+      "notebook": "06_base_model_selection_mars",
+      "run_tag": "20260409_190628",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/06_base_model_selection_mars/20260409_190628"
+    },
+    {
+      "run_id": "83808ef1c75048e5b6b89f481c15120e",
+      "notebook": "06_base_model_selection_mars",
+      "run_tag": "20260409_191802",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/06_base_model_selection_mars/20260409_191802"
+    },
+    {
+      "run_id": "d171ab46cb2241cab4135af91a46d7b7",
+      "notebook": "06_base_model_selection_mars",
+      "run_tag": "20260409_194345",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/06_base_model_selection_mars/20260409_194345"
+    },
+    {
+      "run_id": "abfbcfe841f34092a4f32a9f3b738672",
+      "notebook": "07_standard_maml_mars",
+      "run_tag": "20260409_194423",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/07_standard_maml_mars/20260409_194423"
+    },
+    {
+      "run_id": "4ff81c5acf28408abe247caa34335a6a",
+      "notebook": "08_warmstart_maml_mars",
+      "run_tag": "20260409_210311",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/08_warmstart_maml_mars/20260409_210311"
+    },
+    {
+      "run_id": "87ee5f34c2404bc8b21e30b0fe7cb0a6",
+      "notebook": "09_srs_validation_mars",
+      "run_tag": "20260409_213613",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/09_srs_validation_mars/20260409_213613"
+    },
+    {
+      "run_id": "e1816f1e9b024897856daa5082c84304",
+      "notebook": "11_warmstart_srs_adaptive_maml_mars",
+      "run_tag": "20260409_235537",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/11_warmstart_srs_adaptive_maml_mars/20260409_235537"
+    },
+    {
+      "run_id": "ef6c522c13f0473584d84ead89813e0a",
+      "notebook": "11_warmstart_srs_adaptive_maml_mars",
+      "run_tag": "20260410_095801",
+      "out_dir": "/home/user/jamalla/anonymous-users-mooc-session-meta/reports/11_warmstart_srs_adaptive_maml_mars/20260410_095801"
     }
   ]
 }
