@@ -46,8 +46,8 @@ with tab1:
     if not m06:
         st.warning("NB06 report not available for this dataset.")
     else:
-        # ── Build model comparison table ──────────────────────────────────────
-        model_names = ["random", "popularity", "session_knn", "sasrec", "gru4rec"]
+        # ── Build model comparison table — only include models present in report ─
+        all_model_names = ["random", "popularity", "session_knn", "sasrec", "gru4rec"]
         display_names = {
             "random": "Random",
             "popularity": "Popularity",
@@ -59,14 +59,22 @@ with tab1:
         metric_labels = ["HR@1", "HR@5", "HR@10", "NDCG@10", "MRR"]
 
         rows = []
-        for mn in model_names:
+        for mn in all_model_names:
             m_data = m06.get(mn, {})
             if m_data:
                 row = {"Model": display_names[mn]}
                 for mk, ml in zip(metric_keys, metric_labels):
-                    v = m_data.get(mk, 0)
-                    row[ml] = v
+                    row[ml] = m_data.get(mk, 0)
                 rows.append(row)
+
+        # Determine actual selected backbone (highest HR@10 among present models)
+        best_model_key = max(
+            [mn for mn in all_model_names if m06.get(mn)],
+            key=lambda mn: m06.get(mn, {}).get("hr10", 0),
+            default="gru4rec"
+        )
+        best_model_data = m06.get(best_model_key, {})
+        best_model_name = display_names.get(best_model_key, best_model_key)
 
         if rows:
             df_base = pd.DataFrame(rows)
@@ -85,7 +93,7 @@ with tab1:
                 ))
             fig_bar.update_layout(
                 barmode="group",
-                title="Baseline Model Performance Comparison",
+                title="Base Model Performance Comparison",
                 yaxis_title="Score (%)",
                 xaxis_title="Model",
                 height=420,
@@ -99,19 +107,15 @@ with tab1:
             df_display = df_base.copy()
             for ml in metric_labels:
                 df_display[ml] = df_display[ml].apply(lambda v: f"{v*100:.2f}%")
-
-            # Highlight GRU4Rec
-            selected = m06.get("selected_backbone", "gru4rec")
             st.dataframe(df_display, use_container_width=True, hide_index=True)
 
-            # ── Selected backbone callout ─────────────────────────────────────
-            gru = m06.get("gru4rec", {})
+            # ── Selected backbone callout — dynamic ───────────────────────────
             st.success(
-                f"**Selected backbone: GRU4Rec** "
-                f"(HR@10 = {gru.get('hr10', 0)*100:.2f}%, "
-                f"NDCG@10 = {gru.get('ndcg10', 0)*100:.2f}%) — "
+                f"**Selected backbone: {best_model_name}** "
+                f"(HR@10 = {best_model_data.get('hr10', 0)*100:.2f}%, "
+                f"NDCG@10 = {best_model_data.get('ndcg10', 0)*100:.2f}%) — "
                 "highest HR@10 among evaluated models. "
-                "Pre-trained weights saved for warm-start initialisation in NB08 and NB11."
+                "Pre-trained GRU4Rec weights saved for warm-start initialisation in NB08 and NB11."
             )
 
             # ── HR@10 ranking bar ─────────────────────────────────────────────
@@ -159,17 +163,19 @@ with tab2:
     m10 = metrics(reports, "10_srs_adaptive_maml")
     m11 = metrics(reports, "11_warmstart_srs_adaptive_maml")
 
-    gru = m06.get("gru4rec", {}) if m06 else {}
+    # Determine actual selected backbone dynamically
+    all_model_keys = ["random", "popularity", "session_knn", "sasrec", "gru4rec"]
+    disp = {"random": "Random", "popularity": "Popularity", "session_knn": "Session-KNN",
+            "sasrec": "SASRec", "gru4rec": "GRU4Rec"}
+    best_key = max(
+        [k for k in all_model_keys if m06 and m06.get(k)],
+        key=lambda k: m06.get(k, {}).get("hr10", 0),
+        default="gru4rec"
+    ) if m06 else "gru4rec"
+    backbone_data = m06.get(best_key, {}) if m06 else {}
+    backbone_label = disp.get(best_key, best_key)
 
-    model_labels = [
-        "GRU4Rec\n(full data)",
-        "Standard\nMAML (NB07)",
-        "Warm-Start\nMAML (NB08)",
-        "SRS-Adaptive\nMAML (NB10)",
-        "Warm-Start+\nSRS-Adapt (NB11)",
-    ]
-    nb_tags = ["NB06", "NB07", "NB08", "NB10", "NB11 ★"]
-    model_data = [gru, m07, m08, m10 if m10 else {}, m11 if m11 else {}]
+    model_data = [backbone_data, m07, m08, m10 if m10 else {}, m11 if m11 else {}]
     colors_prog = ["#999999", "#4393C3", "#2166AC", "#D73027", "#B30000"]
 
     hr10_vals  = [d.get("hr10", 0)   if d else 0 for d in model_data]
@@ -177,7 +183,7 @@ with tab2:
     mrr_vals   = [d.get("mrr", 0)    if d else 0 for d in model_data]
 
     # ── Progression chart ─────────────────────────────────────────────────────
-    short_labels = ["GRU4Rec", "NB07", "NB08", "NB10", "NB11 ★"]
+    short_labels = [f"{backbone_label}\n(NB06)", "NB07", "NB08", "NB10", "NB11 ★"]
 
     fig_prog = go.Figure()
     fig_prog.add_trace(go.Bar(
@@ -212,7 +218,7 @@ with tab2:
 
     table_rows = []
     for label, tag, d in zip(
-        ["GRU4Rec (full data)", "Standard MAML", "Warm-Start MAML",
+        [f"{backbone_label} (full data)", "Standard MAML", "Warm-Start MAML",
          "SRS-Adaptive MAML", "Warm-Start + SRS-Adapt"],
         ["NB06", "NB07", "NB08", "NB10", "NB11 ★"],
         model_data,
