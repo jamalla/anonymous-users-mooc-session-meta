@@ -60,7 +60,7 @@ def load_latest(nb_name: str):
     return None
 
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner=False, ttl=3600)
 def load_dataset_reports(dataset: str) -> dict:
     """
     Load all available pipeline reports for the given dataset.
