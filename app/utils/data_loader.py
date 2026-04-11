@@ -21,7 +21,10 @@ def find_repo_root() -> Path:
 
 
 REPO_ROOT = find_repo_root()
-REPORTS_DIR = REPO_ROOT / "reports"
+# Reports are stored inside app/data/ so they are committed and available on Streamlit Cloud.
+# Fall back to repo-root reports/ for local development if app/data/ doesn't exist.
+_app_data = Path(__file__).resolve().parent.parent / "data"
+REPORTS_DIR = _app_data if _app_data.exists() else REPO_ROOT / "reports"
 
 # Canonical notebook name prefix per dataset
 DATASET_PREFIX = {

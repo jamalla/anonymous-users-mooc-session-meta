@@ -18,6 +18,7 @@ data/processed/*
 data/interim/*
 runs/*
 results/*
+reports/
 
 docs/*
 scripts/*
